@@ -10,6 +10,10 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 
+//mariaDB connect
+const maria = require('./database/connect/maria');
+maria.connect();
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'njk');
