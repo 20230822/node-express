@@ -1,0 +1,11 @@
+const maria = require('mysql');
+
+const conn = maria.createConnection({
+    host:'svc.sel5.cloudtype.app',
+    port:'31080',
+    user: 'root',
+    password: 'tmdghks12',
+    database:'project'
+})
+
+module.exports = conn;

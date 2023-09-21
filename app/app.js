@@ -6,17 +6,17 @@ var logger = require('morgan');
 const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
 
-var indexRouter = require('./public/routes/index');
+var indexRouter = require('./src/routes/home/index');
 // var usersRouter = require('./routes/users');
 
 var app = express();
 
 //mariaDB connect
-const maria = require('./database/connect/maria');
+const maria = require('./src/database/connect/maria');
 maria.connect();
 
 // // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', './src/views/home');
 app.set('view engine', 'ejs');
 
 // app.set('views', path.join(__dirname, 'public', 'views'));
@@ -30,7 +30,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(`${__dirname}/src/public`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended : true,
