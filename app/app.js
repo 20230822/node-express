@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+dotenv.config();
 
 var indexRouter = require('./src/routes/home/index');
 // var usersRouter = require('./routes/users');

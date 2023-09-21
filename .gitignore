@@ -24,8 +24,9 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-#database connect
-database/connect/
+#dotenv environment
+.env
+.env.test
 
 
 ### Emacs ###
