@@ -1,3 +1,4 @@
+const { response } = require('express');
 const UserStorage = require('./UserStorage');
 class User{
     constructor(body){
@@ -17,6 +18,18 @@ class User{
 
         }
         return { success : false, msg : "존재하지 않는 아이디입니다."};
+    }
+
+    async register(){
+        const client  = this.body;
+        try{
+            const response =await UserStorage.save(client);
+            return response;
+        }catch(error){
+            throw(error);
+
+        }
+        
     }
 }
 
