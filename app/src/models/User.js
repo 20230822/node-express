@@ -1,11 +1,14 @@
+const jwt = require('jsonwebtoken');
+
 const { response } = require('express');
 const UserStorage = require('./UserStorage');
+
 class User{
     constructor(body){
         this.body = body;
     }
 
-    async login(){
+    async login(req, res){
         const client = this.body;
         try{
             
@@ -13,8 +16,32 @@ class User{
             console.log(id, psword);
 
             if(id){
-                if(id === client.id && psword === client.psword){
-                    return {success : true};
+                if(id === client.id && psword === client.psword){   //로그인 성공
+                    //access Token발급
+                    const accessToken = jwt.sign({
+                        client
+                    },process.env.SECRET_ACCESS_KEY
+                    ,{expiresIn: '1m' , issuer : 'realcold0'});
+
+                    //refresh Token 발급
+                    const refreshToken = jwt.sign({
+                        client
+                    },process.env.SECRET_REFRESH_KEY
+                    ,{expiresIn: '24h' , issuer : 'realcold0'});
+
+                    console.log("accessToken " +accessToken,"\n refreshToken " + refreshToken);
+                     
+                    //토큰값 쿠키에 담아서 전송
+                    res.cookie('accessToken', accessToken,{
+                        secure : false, //http로
+                        httpOnly : true //js에서 쿠키 접근 불가능
+                    });
+                    res.cookie('refreshToken', refreshToken,{
+                        secure : false, //http로
+                        httpOnly : true //js에서 쿠키 접근 불가능
+                    });
+                    return { success : true , msg : "로그인 성공"};
+
                 }
                 return { success : false , msg : "비밀번호가 틀렸습니다."};
 
@@ -50,6 +77,22 @@ class User{
             throw(err);
 
         }
+        
+    }
+
+    async accessToken(token){
+        try {
+            const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
+            const userData = await UserStorage.getUserInfo(client.id);
+
+            if(data.id === Userdata.id){
+                return{success : true, userData: userData };
+            }
+
+        } catch (error) {
+            
+        }
+        
         
     }
 }
