@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-
 const { response } = require('express');
 const UserStorage = require('./UserStorage');
 
@@ -19,13 +18,13 @@ class User{
                 if(id === client.id && psword === client.psword){   //로그인 성공
                     //access Token발급
                     const accessToken = jwt.sign({
-                        client
+                        id
                     },process.env.SECRET_ACCESS_KEY
-                    ,{expiresIn: '1m' , issuer : 'realcold0'});
+                    ,{expiresIn: '5m' , issuer : 'realcold0'});
 
                     //refresh Token 발급
                     const refreshToken = jwt.sign({
-                        client
+                        id
                     },process.env.SECRET_REFRESH_KEY
                     ,{expiresIn: '24h' , issuer : 'realcold0'});
 
@@ -80,17 +79,60 @@ class User{
         
     }
 
-    async accessToken(token){
+    static async accessToken(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
-            const userData = await UserStorage.getUserInfo(client.id);
-
-            if(data.id === Userdata.id){
-                return{success : true, userData: userData };
+            const {id,psword} = await UserStorage.getUserInfo(data.id);
+            
+            if(data.id === id){
+                return { success : true , id : id};
+            }else{
+                return { success : false, msg : '만료'};
             }
 
         } catch (error) {
-            
+            return { success : false, msg : error};
+        }
+        
+        
+    }
+    static async refreshToken(token){
+        try {
+            const data = jwt.verify(token, process.env.SECRET_REFRESH_KEY);
+            const {id,psword} = await UserStorage.getUserInfo(data.id);
+            if(data.id === id){
+                const accessToken = jwt.sign({
+                    id
+                },process.env.SECRET_ACCESS_KEY
+                ,{expiresIn: '5m' , issuer : 'realcold0'});
+
+                //토큰값 쿠키에 담아서 전송
+                return {success : true, accessToken : accessToken};
+                
+            }else{
+                return { success : false, msg : '만료'};
+            }
+
+        } catch (error) {
+            return { success : false, msg : 'error'};
+        }
+        
+        
+    }
+
+    static async loginSuccess(token){
+        try {
+            const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
+            const {id,psword} = await UserStorage.getUserInfo(data.id);
+            if(data.id === id){
+                return {success : true, id: id};
+                
+            }else{
+                return { success : false, msg : '만료'};
+            }
+
+        } catch (error) {
+            return { success : false, msg : 'error'};
         }
         
         
