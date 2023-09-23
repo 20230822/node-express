@@ -20,7 +20,7 @@ jobs:
         uses: cloudtype-github-actions/deploy@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
-          project: realcold0/node-express
+          project: 20230822/node-express
           stage: main
           yaml: |
             name: node-express
