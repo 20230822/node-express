@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const { response } = require('express');
 const UserStorage = require('./UserStorage');
 
@@ -10,12 +11,14 @@ class User{
     async login(req, res){
         const client = this.body;
         try{
-            
             const {id, psword} = await UserStorage.getUserInfo(client.id);
-            console.log(id, psword);
 
             if(id){
-                if(id === client.id && psword === client.psword){   //로그인 성공
+                // 입력된 비밀번호와 저장된 해시된 비밀번호 비교
+                const isPasswordValid = bcrypt.compareSync(client.psword, psword);
+                const isIdValid = id === client.id;
+
+                if( isIdValid && isPasswordValid ){   //로그인 성공
                     //access Token발급
                     const accessToken = jwt.sign({
                         id
@@ -47,7 +50,7 @@ class User{
             }
             return { success : false, msg : "존재하지 않는 아이디입니다."};
         }catch(err){
-            return {success: false,msg :err};
+            return {success: false, msg : err};
         }
     }
 
@@ -66,6 +69,11 @@ class User{
             const response = await UserStorage.getUserInfo(client.id);
             if (!response) {
                 if (client.psword == client['confirm-psword']) {
+                    // 비밀번호 해시 생성
+                    const saltRounds = 10; // 솔트 라운드 수 설정
+                    const hashedPassword = await bcrypt.hash(client.psword, saltRounds);
+                    client.psword = hashedPassword;
+
                     const response = await UserStorage.save(client);
                     return response;
                 }
