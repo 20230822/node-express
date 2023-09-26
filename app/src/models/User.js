@@ -64,11 +64,14 @@ class User{
             if (client.id.length < 6 || client.id.length > 40) {
                 return { success: false, mag: "아이디는 6~40자로 설정하셔야 합니다." };
             }
-            if (client.psword.length < 8 || client.psword.length > 40) {
-                return { success: false, msg: "비밀번호는 8~40자로 설정하셔야 합니다." };
+            if (!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(client.psword)){  
+                return { success: false, mas: "'비밀번호는 숫자+영문자+특수문자 조합으로 8~25자로 설정하셔야 합니다." };
             }
-            if(!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(client.psword)){  
-                return { success: false, msg: "비밀번호는 숫자+영문자+특수문자 조합으로 설정하셔야 합니다." };
+            if (!/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(client.email)){
+                return { success: false, msg: "이메일 형식을 제대로 입력해주세요." };
+            }
+            if (!/^\d{3}-\d{4}-\d{4}$/.test(client.phone_num)){
+                return { success: false, msg: "전화번호를 형식에 맞게 입력해주세요." };
             }
 
             // 아이디 존재 여부, 비밀번호 같은지 확인
