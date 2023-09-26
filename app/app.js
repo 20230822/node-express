@@ -19,8 +19,8 @@ const maria = require('./src/database/connect/maria');
 maria.connect();
 
 // // view engine setup
-app.set('views', path.join(__dirname,'src', 'views'));
-app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname,'src', 'views'));
+// app.set('view engine', 'ejs');
 
 // app.set('views', path.join(__dirname, 'public', 'views'));
 // app.set('view engine', 'njk');
@@ -39,7 +39,7 @@ app.use(cors({
   credentials : true //쿠키 사용
 }));
 
-app.use(express.static(`${__dirname}/src/public`));
+app.use(express.static(path.join(__dirname, 'src/public/build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended : true,

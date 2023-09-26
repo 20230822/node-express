@@ -4,9 +4,7 @@ const ctrl = require('./home.ctrl');
 
 
 
-/* GET home page. */
-router.get('/', ctrl.output.home);
-router.get('/login', ctrl.output.login);
+
 
 router.post('/login', ctrl.process.login ); //로그인 post요청
 router.post('/register', ctrl.process.register);
