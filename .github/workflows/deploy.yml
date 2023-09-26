@@ -30,21 +30,21 @@ jobs:
                 - name: NODE_ENV
                   value: production
                 - name: PORT
-                  value: ${{ PORT }}
+                  value: ${{ secrets.PORT }}
                 - name: DB_HOST
-                  value: ${{ DB_HOST }}
+                  value: ${{ secrets.DB_HOST }}
                 - name: DB_PORT
-                  value: ${{ DB_PORT }}
+                  value: ${{ secrets.DB_PORT }}
                 - name: DB_USER
-                  value: ${{ DB_USER }}
+                  value: ${{ secrets.DB_USER }}
                 - name: DB_PSWORD
-                  value: ${{ DB_PSWORD }}
+                  value: ${{ secrets.DB_PSWORD }}
                 - name: DB_DATABASE
-                  value: ${{ DB_DATABASE }}
+                  value: ${{ secrets.DB_DATABASE }}
                 - name: SECRET_ACCESS_KEY
-                  value: ${{ SECRET_ACCESS_KEY }}
+                  value: ${{ secrets.SECRET_ACCESS_KEY }}
                 - name: SECRET_REFRESH_KEY
-                  value: ${{ SECRET_REFRESH_KEY }}
+                  value: ${{ secrets.SECRET_REFRESH_KEY }}
               ports: 3000
               install: npm ci --production
               start: npm start
