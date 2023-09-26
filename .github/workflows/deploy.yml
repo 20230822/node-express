@@ -22,7 +22,7 @@ jobs:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
           project: realcold0/node-express
           stage: main
-          yaml: |
+          yaml:
             name: node-express
             app: node@18
             options:
