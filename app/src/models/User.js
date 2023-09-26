@@ -60,18 +60,21 @@ class User{
     async register(){
         const client  = this.body;
         try{
-            // 글자수 제한 확인
+            // 글자수 제한 확인 및 비밀번호 조합 확인
             if (client.id.length < 6 || client.id.length > 40) {
-                return { success: false, mag: "아이디는 6~40자로 설정하셔야 합니다." }
+                return { success: false, mag: "아이디는 6~40자로 설정하셔야 합니다." };
             }
             if (client.psword.length < 8 || client.psword.length > 40) {
-                return { success: false, msg: "비밀번호는 8~40자로 설정하셔야 합니다." }
+                return { success: false, msg: "비밀번호는 8~40자로 설정하셔야 합니다." };
+            }
+            if(!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(client.psword)){  
+                return { success: false, mas: "'비밀번호는 숫자+영문자+특수문자 조합으로 설정하셔야 합니다." };
             }
 
             // 아이디 존재 여부, 비밀번호 같은지 확인
             const response = await UserStorage.getUserInfo(client.id);
             if (!response) {
-                if (client.psword == client['confirm-psword']) {
+                if (client.psword == client['confirm_psword']) {
                     // 비밀번호 해시 생성
                     const saltRounds = 10; // 솔트 라운드 수 설정
                     const hashedPassword = await bcrypt.hash(client.psword, saltRounds);
