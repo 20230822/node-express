@@ -68,7 +68,7 @@ class User{
                 return { success: false, msg: "비밀번호는 8~40자로 설정하셔야 합니다." };
             }
             if(!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(client.psword)){  
-                return { success: false, mas: "'비밀번호는 숫자+영문자+특수문자 조합으로 설정하셔야 합니다." };
+                return { success: false, msg: "비밀번호는 숫자+영문자+특수문자 조합으로 설정하셔야 합니다." };
             }
 
             // 아이디 존재 여부, 비밀번호 같은지 확인
