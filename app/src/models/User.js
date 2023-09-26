@@ -11,8 +11,10 @@ class User{
     async login(req, res){
         const client = this.body;
         try{
-            const {id, psword} = await UserStorage.getUserInfo(client.id);
-
+            const {id, psword} = await UserStorage.getUserInfo(client.id).then(resp =>{
+                return resp ? resp : {};
+            });
+            
             if(id){
                 // 입력된 비밀번호와 저장된 해시된 비밀번호 비교
                 const isPasswordValid = bcrypt.compareSync(client.psword, psword);
@@ -46,6 +48,7 @@ class User{
 
                 }
                 return { success : false , msg : "비밀번호가 틀렸습니다."};
+                
 
             }
             return { success : false, msg : "존재하지 않는 아이디입니다."};
