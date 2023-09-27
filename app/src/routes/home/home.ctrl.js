@@ -6,7 +6,7 @@ const { response } = require('express');
 const output = {
 
     home : (req,res) => {
-       res.sendFile(path.join('../', '../', 'build/index.html'));
+       res.sendFile(path.join('../', '../', '/public/build/index.html'));
    },
    
 
