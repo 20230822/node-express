@@ -57,7 +57,7 @@ class User{
         }
     }
 
-    async register(){
+    async register(req, res){
         const client  = this.body;
         try{
             // 글자수 제한 확인 및 비밀번호 조합 확인

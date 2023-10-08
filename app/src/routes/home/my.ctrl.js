@@ -10,6 +10,13 @@ const process = {
         console.log(response);
         return res.json(response);
     },
+
+    wishlist : async (req, res) => {
+        const my = new My(req.body);
+        const response = await my.wishlist(req,res);
+        console.log(response);
+        return res.json(response);
+    },
 }
 
 module.exports = {
