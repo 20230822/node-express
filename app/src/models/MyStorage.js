@@ -14,6 +14,17 @@ class MyStorage{
             })
         })
     }
+
+    static getMyWishlist(id){
+        return new Promise((resolve, reject) => {
+            const query = "SELECT * FROM WISHLIST_TB WHERE USER_FK = ?;";
+            maria.query(query, [id], (err, data) => {
+                if(err) reject(`${err}`);
+                console.log(data);
+                resolve(data);
+            })
+        })
+    }
 }
 
 module.exports = MyStorage;

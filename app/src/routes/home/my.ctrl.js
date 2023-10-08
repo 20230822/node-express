@@ -7,9 +7,10 @@ const process = {
     cart : async (req, res) => {
         try {
             const token = req.cookies.accessToken;
-            const response = await my.cart(token,res);
+            const response = await My.cart(token,res);
+
             if(response.success === true){
-                res.status(200).json(id);
+                res.status(200).json(response);
             }else{
                 res.status(500).json(response.msg);
             }
@@ -21,9 +22,10 @@ const process = {
     wishlist : async (req, res) => {
         try {
             const token = req.cookies.accessToken;
-            const response = await my.wishlist(token,res);
+            const response = await My.wishlist(token,res);
+            console.log(response);
             if(response.success === true){
-                res.status(200).json(id);
+                res.status(200).json(response);
             }else{
                 res.status(500).json(response.msg);
             }
