@@ -11,7 +11,7 @@ class User{
     async login(req, res){
         const client = this.body;
         try{
-            const {id, psword} = await UserStorage.getUserInfo(client.id).then(resp =>{
+            const {USER_ID : id,USER_PW : psword} = await UserStorage.getUserInfo(client.id).then(resp =>{
                 return resp ? resp : {};
             });
             
@@ -73,10 +73,13 @@ class User{
             if (!/^\d{3}-\d{4}-\d{4}$/.test(client.phone_num)){
                 return { success: false, msg: "전화번호를 형식에 맞게 입력해주세요." };
             }
-
+            
             // 아이디 존재 여부, 비밀번호 같은지 확인
-            const response = await UserStorage.getUserInfo(client.id);
-            if (!response) {
+            const response = await UserStorage.getUserInfo(client.id).then(resp =>{
+                return resp ? resp : {};
+            });
+
+            if (response) {
                 if (client.psword == client['confirm_psword']) {
                     // 비밀번호 해시 생성
                     const saltRounds = 10; // 솔트 라운드 수 설정
@@ -99,7 +102,7 @@ class User{
     static async accessToken(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
-            const {id,psword} = await UserStorage.getUserInfo(data.id);
+            const {USER_ID : id,USER_PW : psword} = await UserStorage.getUserInfo(data.id);
             
             if(data.id === id){
                 return { success : true , id : id};
@@ -116,7 +119,8 @@ class User{
     static async refreshToken(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_REFRESH_KEY);
-            const {id,psword} = await UserStorage.getUserInfo(data.id);
+            const {USER_ID : id,USER_PW : psword} = await UserStorage.getUserInfo(data.id);
+
             if(data.id === id){
                 const accessToken = jwt.sign({
                     id
@@ -140,7 +144,7 @@ class User{
     static async loginSuccess(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
-            const {id,psword} = await UserStorage.getUserInfo(data.id);
+            const {USER_ID : id,USER_PW : psword} = await UserStorage.getUserInfo(data.id);
             if(data.id === id){
                 return {success : true, id: id};
                 

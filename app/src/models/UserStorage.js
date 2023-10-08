@@ -6,7 +6,7 @@ class UserStorage{
 
     static getUserInfo(id){
         return new Promise((resolve, reject) => {
-            const query = "SELECT * FROM user WHERE id = ?;";
+            const query = "SELECT * FROM USER_TB WHERE USER_ID = ?;";
             maria.query(query, [id], (err, data) => {
                 if(err) reject(`${err}`);
                 console.log(data);
@@ -17,11 +17,10 @@ class UserStorage{
 
     static save(userInfo){
         return new Promise((resolve, reject) => {
-            const query = "INSERT INTO user(id, psword, name, email,phone_num,adress) VALUES(?, ?, ?, ?, ?, ?);";
-            maria.query(query, [userInfo.id, userInfo.psword, userInfo.name, userInfo.email, userInfo. phone_num, userInfo.adress]
+            const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, EMAIL,PHONE_NO,ADRESS,USER_PROFILE,USER_BIRTHDAY) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
+            maria.query(query, [userInfo.id, userInfo.psword, userInfo.name, userInfo.email, userInfo. phone_num, userInfo.adress, userInfo.profile, userInfo.birthday]
                 , (err) => {
                 if(err) reject(`${err}`);
-                console.log('회원가입');
                 resolve({
                     success : true
                 });

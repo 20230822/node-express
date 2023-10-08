@@ -6,7 +6,7 @@ class My{
     async cart(token, res){
         try{
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
-            const id = await UserStorage.getUserInfo(data.id);
+            const {USER_ID : id} = await UserStorage.getUserInfo(data.id);
             const myCart = await MyStorage.getMyCart(id).then(resp =>{
                 return resp ? resp : {};
             });

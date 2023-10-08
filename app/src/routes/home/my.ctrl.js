@@ -5,17 +5,31 @@ const { response } = require('express');
 
 const process = {
     cart : async (req, res) => {
-        const my = new My(req.body);
-        const response = await my.cart(req,res);
-        console.log(response);
-        return res.json(response);
+        try {
+            const token = req.cookies.accessToken;
+            const response = await my.cart(token,res);
+            if(response.success === true){
+                res.status(200).json(id);
+            }else{
+                res.status(500).json(response.msg);
+            }
+        } catch {
+            res.status(500).json(response.msg);
+        }
     },
 
     wishlist : async (req, res) => {
-        const my = new My(req.body);
-        const response = await my.wishlist(req,res);
-        console.log(response);
-        return res.json(response);
+        try {
+            const token = req.cookies.accessToken;
+            const response = await my.wishlist(token,res);
+            if(response.success === true){
+                res.status(200).json(id);
+            }else{
+                res.status(500).json(response.msg);
+            }
+        } catch {
+            res.status(500).json(response.msg);
+        }
     },
 }
 
