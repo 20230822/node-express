@@ -9,7 +9,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 const cors = require('cors');
 
-var indexRouter = require('./src/routes/home/index');
+var userRouter = require('./src/routes/user/user');
+var myRouter = require('./src/routes/mypage/my');
+
 // var usersRouter = require('./routes/users');
 
 var app = express();
@@ -45,7 +47,8 @@ app.use(bodyParser.urlencoded({
     extended : true,
 })); // url을 통해 전달되는 데이터에 한글, 공백곽 같은 문자가 포함 될경우 제대로 인식하지 않는 문제 해결
 
-app.use('/api', indexRouter);
+app.use('/api', userRouter);
+app.use('/api/mypage', myRouter);
 // app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

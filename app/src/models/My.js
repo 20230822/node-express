@@ -15,7 +15,7 @@ class My{
 
             if (data.id == id ) {
                 if (mypage) return { success : true, data : mypage };
-                return { success: false, msg: "장바구니에 담긴 상품이 없습니다." };
+                return { success: false, msg: "저장된 정보가 없습니다." };
             }
             else{
                 return { success : false, msg : '만료'};
