@@ -4,7 +4,7 @@ const maria = require('../database/connect/maria');
 
 class MyStorage{
 
-    static getMypage(id){
+    static getMypage(id) {
         return new Promise((resolve, reject) => {
             const query = "SELECT USER_NM, USER_ID, USER_PROFILE FROM USER_TB WHERE USER_ID = ?;";
             maria.query(query, [id], (err, data) => {
@@ -15,7 +15,7 @@ class MyStorage{
         })
     }
 
-    static getMyCart(id){
+    static getMyCart(id) {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM CART_TB WHERE USER_FK = ?;";
             maria.query(query, [id], (err, data) => {
@@ -26,7 +26,7 @@ class MyStorage{
         })
     }
 
-    static getMyWishlist(id){
+    static getMyWishlist(id) {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM WISHLIST_TB WHERE USER_FK = ?;";
             maria.query(query, [id], (err, data) => {
@@ -37,7 +37,7 @@ class MyStorage{
         })
     }
 
-    static getMyRecommended(){
+    static getMyRecommended() {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM RECOMMENDED_TB;";
             maria.query(query, [id], (err, data) => {
@@ -48,7 +48,7 @@ class MyStorage{
         })
     }
 
-    static getMyOrder(id){
+    static getMyOrder(id) {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM ORDER_TB WHERE USER_FK = ?;";
             maria.query(query, [id], (err, data) => {
