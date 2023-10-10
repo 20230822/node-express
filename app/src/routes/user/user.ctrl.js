@@ -15,7 +15,7 @@ const output = {
 const process = {
     login : async (req, res) => {
         const user = new User(req.body);
-        const response = await user.login(req,res);
+        const response = await user.login(req, res);
         console.log(response);
         return res.json(response);
     },

@@ -21,8 +21,8 @@ class My{
                 return { success : false, msg : '만료' };
             }  
 
-        } catch(error) {
-            return { success: false, msg : error };
+        } catch(err) {
+            return { success: false, msg : err };
         }
     }
 
@@ -42,8 +42,8 @@ class My{
                 return { success : false, msg : '만료'};
             }  
 
-        } catch(error) {
-            return { success: false, msg : error };
+        } catch(err) {
+            return { success: false, msg : err };
         }
     }
 
@@ -64,7 +64,7 @@ class My{
             }   
 
         } catch(err) {
-            return { success: false, msg : error };
+            return { success: false, msg : err };
         }
     }
 
@@ -77,8 +77,8 @@ class My{
             if (myRecommended) return { success : true, data : myRecommended };
             return { success: false, msg: "추천상품이 없습니다." };
 
-        } catch(error) {
-            return { success: false, msg : error };
+        } catch(err) {
+            return { success: false, msg : err };
         }
     }
 
@@ -98,8 +98,30 @@ class My{
                 return { success : false, msg : '만료' };
             }   
             
-        } catch(error) {
-            return { success: false, msg : error };
+        } catch(err) {
+            return { success: false, msg : err };
+        }
+    }
+
+    static async edit(token, req){
+        const client = req.body;
+        try{
+            const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
+            const { USER_ID : id } = await UserStorage.getUserInfo(data.id);
+            const myEdit = await MyStorage.getMyEdit(client, id).then(resp =>{
+                return resp ? resp : {};
+            });
+            
+            if (data.id == id) {
+                if (myEdit) return { success : true, data : myEdit };
+                return { success: false, msg: "회원정보 수정이 완료되었습니다." };
+            }
+            else {
+                return { success : false, msg : '만료' };
+            }   
+            
+        } catch(err) {
+            return { success: false, msg : err };
         }
     }
 }

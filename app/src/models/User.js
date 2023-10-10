@@ -50,8 +50,8 @@ class User{
             }
             return { success : false, msg : "존재하지 않는 아이디입니다." };
 
-        } catch (error) {
-            return { success: false, msg : error };
+        } catch (err) {
+            return { success: false, msg : err };
         }
     }
 
@@ -84,8 +84,8 @@ class User{
                 return { success: false, msg : "비밀번호가 다릅니다." };
             }
             return { success: false, msg : "이미 존재하는 아이디입니다." };
-        } catch (error) {
-            throw(error);
+        } catch (err) {
+            throw(err);
         } 
     }
 
@@ -100,8 +100,8 @@ class User{
                 return { success : false, msg : '만료' };
             }
 
-        } catch (error) {
-            return { success : false, msg : error };
+        } catch (err) {
+            return { success : false, msg : err };
         } 
     }
 
@@ -125,8 +125,8 @@ class User{
                 return { success : false, msg : '만료' };
             }
 
-        } catch (error) {
-            return { success : false, msg : error };
+        } catch (err) {
+            return { success : false, msg : err };
         }
     }
 
@@ -140,8 +140,8 @@ class User{
                 return { success : false, msg : '만료' };
             }
 
-        } catch (error) {
-            return { success : false, msg : error };
+        } catch (err) {
+            return { success : false, msg : err };
         } 
     }
 }

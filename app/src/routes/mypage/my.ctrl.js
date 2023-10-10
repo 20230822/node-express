@@ -10,11 +10,12 @@ const process = {
             const token = req.cookies.accessToken;
             const response = await My.mypage(token, res);
 
-            if(response.success === true){
+            if (response.success === true) {
                 res.status(200).json(response);
-            }else{
+            } else {
                 res.status(500).json(response.msg);
             }
+
         } catch {
             res.status(500).json(response.msg);
         }
@@ -25,11 +26,12 @@ const process = {
             const token = req.cookies.accessToken;
             const response = await My.cart(token, res);
 
-            if(response.success === true){
+            if (response.success === true) {
                 res.status(200).json(response);
-            }else{
+            } else {
                 res.status(500).json(response.msg);
             }
+
         } catch {
             res.status(500).json(response.msg);
         }
@@ -39,12 +41,13 @@ const process = {
         try {
             const token = req.cookies.accessToken;
             const response = await My.wishlist(token, res);
-            console.log(response);
-            if(response.success === true){
+          
+            if (response.success === true) {
                 res.status(200).json(response);
-            }else{
+            } else {
                 res.status(500).json(response.msg);
             }
+
         } catch {
             res.status(500).json(response.msg);
         }
@@ -54,12 +57,13 @@ const process = {
         try {
             const token = req.cookies.accessToken;
             const response = await My.recommended(req, res);
-            console.log(response);
-            if(response.success === true){
+        
+            if (response.success === true) {
                 res.status(200).json(response);
-            }else{
+            } else {
                 res.status(500).json(response.msg);
             }
+
         } catch {
             res.status(500).json(response.msg);
         }
@@ -69,12 +73,29 @@ const process = {
         try {
             const token = req.cookies.accessToken;
             const response = await My.order(token, res);
-            console.log(response);
-            if(response.success === true){
+       
+            if (response.success === true) {
                 res.status(200).json(response);
-            }else{
+            } else {
                 res.status(500).json(response.msg);
             }
+
+        } catch {
+            res.status(500).json(response.msg);
+        }
+    },
+
+    edit : async (req, res) => {
+        try {
+            const token = req.cookies.accessToken;
+            const response = await My.edit(token, req);
+
+            if (response.success === true){
+                res.status(200).json(response);
+            } else {
+                res.status(500).json(response.msg);
+            }
+
         } catch {
             res.status(500).json(response.msg);
         }
