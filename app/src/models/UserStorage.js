@@ -6,10 +6,9 @@ class UserStorage{
 
     static getUserInfo(id){
         return new Promise((resolve, reject) => {
-            const query = "SELECT * FROM USER_TB WHERE USER_ID = ?;";
+            const query = "SELECT USER_ID, USER_PW FROM USER_TB WHERE USER_ID = ?;";
             maria.query(query, [id], (err, data) => {
                 if(err) reject(`${err}`);
-                console.log(data);
                 resolve(data[0]);
             })
         })

@@ -10,17 +10,17 @@ class User{
 
     async login(req, res){
         const client = this.body;
-        try{
-            const {USER_ID : id,USER_PW : psword} = await UserStorage.getUserInfo(client.id).then(resp =>{
+        try {
+            const { USER_ID : id, USER_PW : psword } = await UserStorage.getUserInfo(client.id).then(resp =>{
                 return resp ? resp : {};
             });
             
-            if(id){
+            if (id) {
                 // 입력된 비밀번호와 저장된 해시된 비밀번호 비교
                 const isPasswordValid = bcrypt.compareSync(client.psword, psword);
                 const isIdValid = id === client.id;
 
-                if( isIdValid && isPasswordValid ){   //로그인 성공
+                if (isIdValid && isPasswordValid) {   //로그인 성공
                     //access Token발급
                     const accessToken = jwt.sign({
                         id
@@ -44,22 +44,20 @@ class User{
                         secure : false, //http로
                         httpOnly : true //js에서 쿠키 접근 불가능
                     });
-                    return { success : true , msg : "로그인 성공"};
-
+                    return { success : true , msg : "로그인 성공" };
                 }
-                return { success : false , msg : "비밀번호가 틀렸습니다."};
-                
-
+                return { success : false , msg : "비밀번호가 틀렸습니다." };
             }
-            return { success : false, msg : "존재하지 않는 아이디입니다."};
-        }catch(err){
-            return {success: false, msg : err};
+            return { success : false, msg : "존재하지 않는 아이디입니다." };
+
+        } catch (err) {
+            return { success: false, msg : err };
         }
     }
 
     async register(req, res){
         const client  = this.body;
-        try{
+        try {
             // 글자수 제한 확인 및 비밀번호 조합 확인
             if (!/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(client.email)){
                 return { success: false, msg: "아이디를 이메일 형식으로 입력해주세요." };
@@ -86,71 +84,65 @@ class User{
                 return { success: false, msg : "비밀번호가 다릅니다." };
             }
             return { success: false, msg : "이미 존재하는 아이디입니다." };
-        }catch(err){
+        } catch (err) {
             throw(err);
-
-        }
-        
+        } 
     }
 
     static async accessToken(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
-            const {USER_ID : id,USER_PW : psword} = await UserStorage.getUserInfo(data.id);
+            const { USER_ID : id } = await UserStorage.getUserInfo(data.id);
             
             if(data.id === id){
-                return { success : true , id : id};
+                return { success : true , id : id };
             }else{
-                return { success : false, msg : '만료'};
+                return { success : false, msg : '만료' };
             }
 
-        } catch (error) {
-            return { success : false, msg : error};
-        }
-        
-        
+        } catch (err) {
+            return { success : false, msg : err };
+        } 
     }
+
     static async refreshToken(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_REFRESH_KEY);
-            const {USER_ID : id,USER_PW : psword} = await UserStorage.getUserInfo(data.id);
+            const { USER_ID : id } = await UserStorage.getUserInfo(data.id);
 
-            if(data.id === id){
+            if (data.id === id){
                 const accessToken = jwt.sign({
                     id
-                },process.env.SECRET_ACCESS_KEY
-                ,{expiresIn: '5m' , issuer : 'realcold0'});
+                }
+                , process.env.SECRET_ACCESS_KEY
+                , { expiresIn : '5m' , issuer : 'realcold0' }
+                );
 
                 //토큰값 쿠키에 담아서 전송
-                return {success : true, accessToken : accessToken};
+                return { success : true, accessToken : accessToken };
                 
-            }else{
-                return { success : false, msg : '만료'};
+            } else {
+                return { success : false, msg : '만료' };
             }
 
-        } catch (error) {
-            return { success : false, msg : 'error'};
+        } catch (err) {
+            return { success : false, msg : err };
         }
-        
-        
     }
 
     static async loginSuccess(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
-            const {USER_ID : id,USER_PW : psword} = await UserStorage.getUserInfo(data.id);
-            if(data.id === id){
-                return {success : true, id: id};
-                
-            }else{
-                return { success : false, msg : '만료'};
+            const { USER_ID : id } = await UserStorage.getUserInfo(data.id);
+            if ( data.id === id ){
+                return { success : true, id: id }; 
+            } else {
+                return { success : false, msg : '만료' };
             }
 
-        } catch (error) {
-            return { success : false, msg : 'error'};
-        }
-        
-        
+        } catch (err) {
+            return { success : false, msg : err };
+        } 
     }
 }
 
