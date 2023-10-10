@@ -17,7 +17,7 @@ class UserStorage{
 
     static save(userInfo){
         return new Promise((resolve, reject) => {
-            const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, EMAIL,PHONE_NO,ADRESS,USER_PROFILE,USER_BIRTHDAY) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
+            const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, USER_PROFILE) VALUES(?, ?, ?, ?);";
             maria.query(query, [userInfo.id, userInfo.psword, userInfo.name, userInfo.email, userInfo. phone_num, userInfo.adress, userInfo.profile, userInfo.birthday]
                 , (err) => {
                 if(err) reject(`${err}`);
