@@ -45,7 +45,7 @@ app.use(bodyParser.urlencoded({
     extended : true,
 })); // url을 통해 전달되는 데이터에 한글, 공백곽 같은 문자가 포함 될경우 제대로 인식하지 않는 문제 해결
 
-app.use('/', indexRouter);
+app.use('/api', indexRouter);
 // app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
