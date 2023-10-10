@@ -7,7 +7,6 @@ class ProductStorage{
             const query = "SELECT * FROM  PRODUCT_TB WHERE PRODUCT_PK = ?;";
             maria.query(query, [id], (err,data) =>{
                 if(err) reject(`${err}`);
-                console.log(data);
                 resolve(data[0]);
             })
         })
@@ -28,6 +27,15 @@ class ProductStorage{
             
         });
 
+    }
+    static searchProduct(searchKeyword){
+        return new Promise((resolve, reject) => {
+            const query = "SELECT * FROM PRODUCT_TB WHERE PRODUCT_NM LIKE ? OR COLOR LIKE ? OR HASHTAG LIKE ?;";
+            maria.query(query,[`%${searchKeyword}%`, `%${searchKeyword}%`, `%${searchKeyword}%`  ], (err, data) =>{
+                if(err) reject(`${err}`);
+                resolve(data);
+            })
+        })
     }
 }
 

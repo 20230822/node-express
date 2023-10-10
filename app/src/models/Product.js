@@ -44,8 +44,15 @@ class Product{
         }
     }
 
-    
-        
+    async search(){
+        try{
+            console.log(this.body);
+            const response = await ProductStorage.searchProduct(this.body);
+            return response;
+        }catch(error){
+            return { success : false , msg : error};
+        }
+    }
 }
 
 module.exports = Product;
