@@ -11,6 +11,7 @@ const cors = require('cors');
 
 var userRouter = require('./src/routes/user/user');
 var myRouter = require('./src/routes/mypage/my');
+var productRouter = require('./src/routes/product/product');
 
 // var usersRouter = require('./routes/users');
 
@@ -49,6 +50,7 @@ app.use(bodyParser.urlencoded({
 
 app.use('/api', userRouter);
 app.use('/api/mypage', myRouter);
+app.use('/api/product', productRouter);
 // app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
