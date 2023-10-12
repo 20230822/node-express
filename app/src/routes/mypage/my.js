@@ -7,6 +7,9 @@ router.post('/cart', my.process.cart);
 router.post('/wishlist', my.process.wishlist);
 router.post('/recommended', my.process.recommended);
 router.post('/order', my.process.order);
-router.post('/edit', my.process.edit);
+
+router.put('/edit', my.update.edit);
+
+// router.delete('/cart')
 
 module.exports = router;

@@ -56,10 +56,12 @@ class MyStorage{
 
     static getMyEdit(client, id) {
         return new Promise((resolve, reject) => {
-            const query = "UPDATE USER_TB SET USER_NM = ?, USER_PROFILE = ? WHERE USER_ID = ?";
-            maria.query(query, [client['name'], client['profile'], id], (err, data) => {
+            const query = "UPDATE USER_TB SET USER_NM = ?, PROFILE_TYPE = ?, PROFILE_DATA = ? WHERE USER_ID = ?;";
+            maria.query(query, [client.name, client.img_type, client.img_data, id], (err, data) => {
                 if(err) reject(`${err}`);
-                resolve(data);
+                resolve({
+                    success : true
+                });
             })
         })
     }

@@ -8,7 +8,7 @@ const process = {
     mypage : async (req, res) => {
         try {
             const token = req.cookies.accessToken;
-            const response = await My.mypage(token, res);
+            const response = await My.mypage(token);
 
             if (response.success === true) {
                 res.status(200).json(response);
@@ -24,7 +24,7 @@ const process = {
     cart : async (req, res) => {
         try {
             const token = req.cookies.accessToken;
-            const response = await My.cart(token, res);
+            const response = await My.cart(token);
 
             if (response.success === true) {
                 res.status(200).json(response);
@@ -40,7 +40,7 @@ const process = {
     wishlist : async (req, res) => {
         try {
             const token = req.cookies.accessToken;
-            const response = await My.wishlist(token, res);
+            const response = await My.wishlist(token);
           
             if (response.success === true) {
                 res.status(200).json(response);
@@ -55,8 +55,7 @@ const process = {
 
     recommended : async (req, res) => {
         try {
-            const token = req.cookies.accessToken;
-            const response = await My.recommended(req, res);
+            const response = await My.recommended(token);
         
             if (response.success === true) {
                 res.status(200).json(response);
@@ -72,7 +71,7 @@ const process = {
     order : async (req, res) => {
         try {
             const token = req.cookies.accessToken;
-            const response = await My.order(token, res);
+            const response = await My.order(token);
        
             if (response.success === true) {
                 res.status(200).json(response);
@@ -84,11 +83,15 @@ const process = {
             res.status(500).json(response.msg);
         }
     },
+}
+
+const update = {
 
     edit : async (req, res) => {
         try {
             const token = req.cookies.accessToken;
-            const response = await My.edit(token, req);
+            const my = new My(req.body);
+            const response = await my.edit(token);
 
             if (response.success === true){
                 res.status(200).json(response);
@@ -103,5 +106,5 @@ const process = {
 }
 
 module.exports = {
-    process
+    process, update
 };

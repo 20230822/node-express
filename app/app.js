@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const nunjucks = require('nunjucks');
+// const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({
   origin : 'http://localhost:3000',
-  methods : ['GET', 'POST'],
+  methods : ['GET', 'POST', 'PUT'],
   credentials : true //쿠키 사용
 }));
 
@@ -47,6 +47,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended : true,
 })); // url을 통해 전달되는 데이터에 한글, 공백곽 같은 문자가 포함 될경우 제대로 인식하지 않는 문제 해결
+app.use(bodyParser.raw({ type: 'image/*' }));
 
 app.use('/api', userRouter);
 app.use('/api/mypage', myRouter);
