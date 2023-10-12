@@ -14,10 +14,10 @@ class UserStorage{
         })
     }
 
-    static save(userInfo){
+    static save(register, imageBuffer){
         return new Promise((resolve, reject) => {
-            const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, USER_PROFILE) VALUES(?, ?, ?, ?);";
-            maria.query(query, [userInfo.id, userInfo.psword, userInfo.name, userInfo.email, userInfo. phone_num, userInfo.adress, userInfo.profile, userInfo.birthday]
+            const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, PROFILE_TYPE, PROFILE_DATA) VALUES(?, ?, ?, ?, ?);";
+            maria.query(query, [register.id, register.psword, register.name, register.img_type, register.img_data]
                 , (err) => {
                 if(err) reject(`${err}`);
                 resolve({

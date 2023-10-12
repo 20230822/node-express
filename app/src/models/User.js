@@ -59,7 +59,7 @@ class User{
         const client  = this.body;
         try {
             // 글자수 제한 확인 및 비밀번호 조합 확인
-            if (!/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(client.email)){
+            if (!/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(client.id)){
                 return { success: false, msg: "아이디를 이메일 형식으로 입력해주세요." };
             }
             if (!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(client.psword)){  

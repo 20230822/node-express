@@ -8,7 +8,7 @@ const output = {
     home : (req,res) => {
        res.sendFile(path.join('../', '../', '/public/build/index.html'));
    },
-   
+
 
 }
 
