@@ -29,8 +29,18 @@ class UserStorage{
 
     static getNotice(){
         return new Promise((resolve, reject) => {
-            const query = "SELECT USER_NM, TITLE, CONTENT, WRITE_DT FROM NOTICE_TB, USER_TB WHERE USER_FK = USER_ID;";
+            const query = "SELECT NOTICE_PK, USER_NM, TITLE, WRITE_DT FROM NOTICE_TB, USER_TB WHERE USER_FK = USER_ID;";
             maria.query(query, (err, data) => {
+                if(err) reject(`${err}`);
+                resolve(data);
+            })
+        })
+    }
+
+    static getDetail(client){
+        return new Promise((resolve, reject) => {
+            const query = "SELECT USER_NM, TITLE, CONTENT, WRITE_DT FROM NOTICE_TB, USER_TB WHERE USER_FK = USER_ID AND NOTICE_PK = ?;";
+            maria.query(query, [client], (err, data) => {
                 if(err) reject(`${err}`);
                 resolve(data);
             })

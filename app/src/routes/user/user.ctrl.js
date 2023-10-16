@@ -31,6 +31,15 @@ const process = {
         return res.json(response);
     },
 
+    detail: async (req, res) =>{
+        const encoded = req.query.page;
+        const decoded = decodeURIComponent(encoded);
+        const user = new User(decoded);
+        const result = await user.detail();
+        
+        return res.status(200).json(result);
+    },
+
     accessToken : async(req, res) => {
         try {
             const token = req.cookies.accessToken;

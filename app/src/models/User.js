@@ -103,6 +103,21 @@ class User{
         }
     }
 
+    async detail(){
+        const client = this.body;
+        try{
+            const detail = await UserStorage.getDetail(client).then(resp =>{
+                return resp ? resp : {};
+            });
+        
+            if (detail) return { success : true, data : detail };
+            return { success: false, msg: "해당 게시글을 불러오는데 실패했습니다." };
+            
+        } catch(err) {
+            return { success: false, msg : err };
+        }
+    }
+
     static async accessToken(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
