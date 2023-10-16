@@ -14,7 +14,7 @@ class UserStorage{
         })
     }
 
-    static save(register, imageBuffer){
+    static save(register){
         return new Promise((resolve, reject) => {
             const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, PROFILE_TYPE, PROFILE_DATA) VALUES(?, ?, ?, ?, ?);";
             maria.query(query, [register.id, register.psword, register.name, register.img_type, register.img_data]
@@ -25,6 +25,16 @@ class UserStorage{
                 });
             });
         });   
+    }
+
+    static getNotice(){
+        return new Promise((resolve, reject) => {
+            const query = "SELECT USER_NM, TITLE, CONTENT, WRITE_DT FROM NOTICE_TB, USER_TB WHERE USER_FK = USER_ID;";
+            maria.query(query, (err, data) => {
+                if(err) reject(`${err}`);
+                resolve(data);
+            })
+        })
     }
 }
 

@@ -26,6 +26,11 @@ const process = {
         return res.json(response);
     },
 
+    notice : async(req, res) => {
+        const response = await User.notice();
+        return res.json(response);
+    },
+
     accessToken : async(req, res) => {
         try {
             const token = req.cookies.accessToken;

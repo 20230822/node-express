@@ -89,6 +89,20 @@ class User{
         } 
     }
 
+    static async notice(){
+        try{
+            const notice = await UserStorage.getNotice().then(resp =>{
+                return resp ? resp : {};
+            });
+        
+            if (notice) return { success : true, data : notice };
+            return { success: false, msg: "공지사항에 게시글이 없습니다." };
+            
+        } catch(err) {
+            return { success: false, msg : err };
+        }
+    }
+
     static async accessToken(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
