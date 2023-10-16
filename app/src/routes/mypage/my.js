@@ -10,6 +10,6 @@ router.post('/order', my.process.order);
 
 router.put('/edit', my.update.edit);
 
-// router.delete('/cart')
+router.delete('/cart', my.del.cart);
 
 module.exports = router;

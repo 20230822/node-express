@@ -54,10 +54,22 @@ class MyStorage{
         })
     }
 
-    static getMyEdit(client, id) {
+    static putMyEdit(client, id) {
         return new Promise((resolve, reject) => {
             const query = "UPDATE USER_TB SET USER_NM = ?, PROFILE_TYPE = ?, PROFILE_DATA = ? WHERE USER_ID = ?;";
             maria.query(query, [client.name, client.img_type, client.img_data, id], (err, data) => {
+                if(err) reject(`${err}`);
+                resolve({
+                    success : true
+                });
+            })
+        })
+    }
+
+    static delMyCart(client, id) {
+        return new Promise((resolve, reject) => {
+            const query = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+            maria.query(query, [id, client.product_id], (err, data) => {
                 if(err) reject(`${err}`);
                 resolve({
                     success : true
