@@ -77,6 +77,18 @@ class MyStorage{
             })
         })
     }
+
+    static delMyWishlist(client, id) {
+        return new Promise((resolve, reject) => {
+            const query = "DELETE FROM WISHLIST_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+            maria.query(query, [id, client.product_id], (err, data) => {
+                if(err) reject(`${err}`);
+                resolve({
+                    success : true
+                });
+            })
+        })
+    }
 }
 
 module.exports = MyStorage;

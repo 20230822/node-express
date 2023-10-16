@@ -11,5 +11,6 @@ router.post('/order', my.process.order);
 router.put('/edit', my.update.edit);
 
 router.delete('/cart', my.del.cart);
+router.delete('/wishlist', my.del.wishlist);
 
 module.exports = router;

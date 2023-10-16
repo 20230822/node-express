@@ -106,11 +106,29 @@ const update = {
 }
 
 const del = {
+
     cart : async (req, res) => {
         try {
             const token = req.cookies.accessToken;
             const my = new My(req.body);
             const response = await my.delCart(token);
+
+            if (response.success === true){
+                res.status(200).json(response);
+            } else {
+                res.status(500).json(response.msg);
+            }
+
+        } catch {
+            res.status(500).json(response.msg);
+        }
+    },
+
+    wishlist : async (req, res) => {
+        try {
+            const token = req.cookies.accessToken;
+            const my = new My(req.body);
+            const response = await my.delWishlist(token);
 
             if (response.success === true){
                 res.status(200).json(response);

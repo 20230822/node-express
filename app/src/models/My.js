@@ -149,6 +149,28 @@ class My{
             return { success: false, msg : err };
         }
     }
+
+    async delWishlist(token){
+        const client = this.body;
+        try{
+            const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
+            const { USER_ID : id } = await UserStorage.getUserInfo(data.id);
+            const myWishlist = await MyStorage.delMyWishlist(client, id).then(resp =>{
+                return resp ? resp : {};
+            });
+
+            if (data.id == id) {
+                if (myWishlist) return { success : true, msg : "관심상품 내역을 삭제하였습니다." };
+                return { success: false, msg: "관심상품 내역 삭제가 처리되지 않았습니다." };
+            }
+            else {
+                return { success : false, msg : '만료' };
+            }   
+            
+        } catch(err) {
+            return { success: false, msg : err };
+        }
+    }
 }
 
 
