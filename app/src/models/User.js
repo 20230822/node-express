@@ -59,7 +59,7 @@ class User{
         const client  = this.body;
         try {
             // 글자수 제한 확인 및 비밀번호 조합 확인
-            if (!/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(client.email)){
+            if (!/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(client.id)){
                 return { success: false, msg: "아이디를 이메일 형식으로 입력해주세요." };
             }
             if (!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(client.psword)){  
@@ -87,6 +87,35 @@ class User{
         } catch (err) {
             throw(err);
         } 
+    }
+
+    static async notice(){
+        try{
+            const notice = await UserStorage.getNotice().then(resp =>{
+                return resp ? resp : {};
+            });
+        
+            if (notice) return { success : true, data : notice };
+            return { success: false, msg: "공지사항에 게시글이 없습니다." };
+            
+        } catch(err) {
+            return { success: false, msg : err };
+        }
+    }
+
+    async detail(){
+        const client = this.body;
+        try{
+            const detail = await UserStorage.getDetail(client).then(resp =>{
+                return resp ? resp : {};
+            });
+        
+            if (detail) return { success : true, data : detail };
+            return { success: false, msg: "해당 게시글을 불러오는데 실패했습니다." };
+            
+        } catch(err) {
+            return { success: false, msg : err };
+        }
     }
 
     static async accessToken(token){

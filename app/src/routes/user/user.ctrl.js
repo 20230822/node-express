@@ -8,7 +8,7 @@ const output = {
     home : (req,res) => {
        res.sendFile(path.join('../', '../', '/public/build/index.html'));
    },
-   
+
 
 }
 
@@ -24,6 +24,20 @@ const process = {
         const user = new User(req.body);
         const response = await user.register();
         return res.json(response);
+    },
+
+    notice : async(req, res) => {
+        const response = await User.notice();
+        return res.json(response);
+    },
+
+    detail: async (req, res) =>{
+        const encoded = req.query.page;
+        const decoded = decodeURIComponent(encoded);
+        const user = new User(decoded);
+        const result = await user.detail();
+        
+        return res.status(200).json(result);
     },
 
     accessToken : async(req, res) => {
