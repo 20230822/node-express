@@ -17,15 +17,15 @@ class MyStorage{
     static getMyCart(id) {
         return new Promise((resolve, reject) => {
             const query = "SELECT "
-                        + "P.PRODUCT_NM, "
-                        + "PI.IMG_DATA, "
-                        + "P.PRICE, "
-                        + "C.QUANTITY "
-                        + "FROM CART_TB C "
-                        + "JOIN PRODUCT_TB P ON C.PRODUCT_FK = P.PRODUCT_PK "
-                        + "JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK "
-                        + "WHERE C.USER_FK = ? "
-                        + "GROUP BY P.PRODUCT_NM;";
+            + "P.PRODUCT_NM, "
+            + "PI.IMG_DATA, "
+            + "P.PRICE, "
+            + "C.QUANTITY "
+            + "FROM CART_TB C "
+            + "JOIN PRODUCT_TB P ON C.PRODUCT_FK = P.PRODUCT_PK "
+            + "JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK "
+            + "WHERE C.USER_FK = ? "
+            + "GROUP BY P.PRODUCT_NM;";
             maria.query(query, [id], (err, data) => {
                 if(err) reject(`${err}`);
                 resolve(data);
@@ -35,7 +35,13 @@ class MyStorage{
 
     static getMyWishlist(id) {
         return new Promise((resolve, reject) => {
-            const query = "SELECT * FROM WISHLIST_TB WHERE USER_FK = ?;";
+            const query = "SELECT "
+            + "W.PRODUCT_FK, "
+            + "PI.IMG_DATA "
+            + "FROM WISHLIST_TB W "
+            + "JOIN PRODUCT_IMG_TB PI ON W.PRODUCT_FK = PI.PRODUCT_FK "
+            + "WHERE W.USER_FK = ? "
+            + "GROUP BY W.PRODUCT_FK;";
             maria.query(query, [id], (err, data) => {
                 if(err) reject(`${err}`);
                 resolve(data);
