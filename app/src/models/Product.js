@@ -1,4 +1,6 @@
 const ProductStorage = require('./ProductStorage');
+const jwt = require('jsonwebtoken');
+const UserStorage = require('./UserStorage');
 class Product{
     
     constructor(body){
@@ -46,13 +48,36 @@ class Product{
 
     async search(){
         try{
-            console.log(this.body);
             const response = await ProductStorage.searchProduct(this.body);
             return response;
         }catch(error){
             return { success : false , msg : error};
         }
     }
+
+
+    async addWishList(token){
+        try{
+            const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
+            
+            const { USER_ID : id} = await UserStorage.getUserInfo(data.id);
+            console.log('a');
+            if(data.id === id){//유저 맞을때
+                
+                const response = await ProductStorage.addWishList(id, this.body);
+                console.log('b');
+                return response;
+            }
+            else{
+                console.log('c');
+                return { success : false, msg : '만료'};
+            }
+        }
+        catch(error){
+            return{success : false, msg: error};
+        }
+    }
+    
 }
 
 module.exports = Product;

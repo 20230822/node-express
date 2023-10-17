@@ -11,10 +11,7 @@ class User{
     async login(req, res){
         const client = this.body;
         try {
-            const { USER_ID : id, USER_PW : psword } = await UserStorage.getUserInfo(client.id).then(resp =>{
-                return resp ? resp : {};
-            });
-            
+            const { USER_ID : id, USER_PW : psword } =  await UserStorage.getUserInfo(client.id);
             if (id) {
                 // 입력된 비밀번호와 저장된 해시된 비밀번호 비교
                 const isPasswordValid = bcrypt.compareSync(client.psword, psword);

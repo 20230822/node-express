@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunklight=self.webpackChunklight||[]).push([[901],{901:function(e,h,l){l.r(h);var n=l(184);h.default=function(){return(0,n.jsx)("div",{className:"help",children:(0,n.jsx)("h1",{children:"help"})})}}}]);
-//# sourceMappingURL=901.b1846c87.chunk.js.map

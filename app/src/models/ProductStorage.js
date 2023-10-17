@@ -8,8 +8,8 @@ class ProductStorage{
             maria.query(query, [id], (err,data) =>{
                 if(err) reject(`${err}`);
                 resolve(data[0]);
-            })
-        })
+            });
+        });
     }
 
     static setProductInfo(prod){
@@ -35,7 +35,34 @@ class ProductStorage{
                 if(err) reject(`${err}`);
                 resolve(data);
             })
+
+            
         })
+    }
+    static async addWishList(userId, product){
+        try{
+            const conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            const query1 = "INSERT INTO WISHLIST_TB(PRODUCT_FK, USER_FK) VALUES(?, ?);";
+            const query2 = "UPDATE PRODUCT_TB SET WISHLIST_CNT = WISHLIST_CNT + 1 WHERE PRODUCT_PK = ?;";
+            
+            await conn.query(query1, [product.productId, userId]);
+            
+            await conn.query(query2, [product.productId]);
+            
+            await conn.commit();
+            return { success : true, msg : "트랜잭션 성공"};
+
+
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            return{ success : false, msg : "트랜잭션 오류"} ;
+        }finally{
+            // conn.release();
+        }
     }
 }
 

@@ -1,2 +1,0 @@
-:root{--detail-basic-width:1240px}.detail{display:flex;flex-direction:column;margin:60px 0;width:100vw}.detail-header{display:flex;height:600px;margin:0 auto;width:1240px;width:var(--detail-basic-width)}.detail-left{background-color:#f88d01;width:50%}.detail-right{background-color:#18eff7;width:50%}.detail-content{background-color:blue;margin:60px auto 0;width:1240px;width:var(--detail-basic-width)}
-/*# sourceMappingURL=273.8b6bb1f1.chunk.css.map*/

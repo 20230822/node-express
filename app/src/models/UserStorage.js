@@ -4,14 +4,25 @@ const maria = require('../database/connect/maria');
 
 class UserStorage{
 
-    static getUserInfo(id){
-        return new Promise((resolve, reject) => {
+    static async getUserInfo(id){
+        try{
             const query = "SELECT USER_ID, USER_PW FROM USER_TB WHERE USER_ID = ?;";
-            maria.query(query, [id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve(data[0]);
-            })
-        })
+            const result = await maria.query(query, [id]);
+
+            if(result){
+                console.log(result[0]);
+                const { USER_ID, USER_PW } = result[0][0];
+                console.log(USER_ID);
+                return { USER_ID , USER_PW };
+            }
+            else{
+                throw Error("존재하지 않는 아이디입니다");
+            }
+        }catch(error){
+            
+            throw error;
+        }
+        
     }
 
     static save(register){
