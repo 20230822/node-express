@@ -8,15 +8,21 @@ const process = {
         //상품 정보 db에서 가져와서 리턴
         const product = new Product(req.body);
         const response = await product.getProductData();
-        console.debug(response);
-        return res.status(200).json(response);
+        if(response.success === true){
+            return res.status(200).json(response);
+        }
+        return res.status(500).json(response);
         
     },
+
     saveProduct : async (req, res) => {
         //body로 받은 데이터 저장
         const product = new Product(req.body);
         const response = await product.setProductData();
-        return res.status(200).json(response);
+        if(response.success === true){
+            return res.status(200).json(response);
+        }
+        return res.status(500).json(response);
 
     },
 
@@ -33,7 +39,10 @@ const process = {
         const decoded = decodeURIComponent(encoded);
         const product = new Product(decoded);
         const result = await product.search();
-        console.log(result[0]);
+        console.log(result.data);
+        if(result.success === true){
+            return res.status(200).json(result);
+        }
         return res.status(200).json(result);
     },
 

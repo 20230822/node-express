@@ -7,26 +7,17 @@ class Product{
         this.body = body;
     }
 
+    
+    /**
+     * 해당 상품의 정보를 불러옴
+     * @returns {any} - success : 수행 성공여부, data : 상품 정보
+     */
     async getProductData(){
         try{
-            const  {PRODUCT_PK : id, CARTEGORY_FK : cartegory, REGISTER_DT : register, 
-                STOCK_AMT : stock, PRICE : price, PRODUCT_NUM : productNum, COLOR : color, DESCRIBE : des, 
-                HASHTAG : hashtag }
-             = await ProductStorage.getProductInfo(this.body.id).then(resp => {
-                return resp ? resp : {};
-             });
-            
+           const response = await ProductStorage.getProductInfo(this.body.id)
              return {
                 success : true,
-                PRODUCT_PK : id, 
-                CARTEGORY_FK : cartegory, 
-                REGISTER_DT : register, 
-                STOCK_AMT : stock, 
-                PRICE : price, 
-                PRODUCT_NUM : productNum, 
-                COLOR : color, 
-                DESCRIBE : des, 
-                HASHTAG : hashtag
+                data : response.data
             };
         }
         catch{
@@ -34,11 +25,16 @@ class Product{
         }
     }
 
+    /**
+     * 상품 정보 등록
+     * @returns {any} - success : 수행 성공여부
+     */
     async setProductData(){
         try {
             
             //데이터 저장
             const response = await ProductStorage.setProductInfo(this.body);
+            
             return response;
             
         }catch (error) {
@@ -46,6 +42,10 @@ class Product{
         }
     }
 
+    /**
+     * 상품 검색
+     * @returns {any} - success : 수행 성공여부
+     */
     async search(){
         try{
             const response = await ProductStorage.searchProduct(this.body);
@@ -56,20 +56,22 @@ class Product{
     }
 
 
+    /**
+     * token의 사용자에게 body의 상품을 위시리스트 등록 후 성공여부 반환
+     * @param {string} token - 사용자 accessToken 값
+     * @returns {boolean , string} - success : 수행 성공여부
+     */
     async addWishList(token){
         try{
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
             
             const { USER_ID : id} = await UserStorage.getUserInfo(data.id);
-            console.log('a');
             if(data.id === id){//유저 맞을때
                 
                 const response = await ProductStorage.addWishList(id, this.body);
-                console.log('b');
                 return response;
             }
             else{
-                console.log('c');
                 return { success : false, msg : '만료'};
             }
         }
