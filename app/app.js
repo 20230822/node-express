@@ -17,9 +17,7 @@ var productRouter = require('./src/routes/product/product');
 
 var app = express();
 
-//mariaDB connect
-const maria = require('./src/database/connect/maria');
-maria.connect();
+
 
 // // view engine setup
 // app.set('views', path.join(__dirname,'src', 'views'));

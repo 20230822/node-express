@@ -1,6 +1,6 @@
 const maria = require('mysql2');
 
-const conn = maria.createConnection({
+const conn = maria.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USER,
