@@ -16,7 +16,16 @@ class MyStorage{
 
     static getMyCart(id) {
         return new Promise((resolve, reject) => {
-            const query = "SELECT * FROM CART_TB WHERE USER_FK = ?;";
+            const query = "SELECT "
+                        + "P.PRODUCT_NM, "
+                        + "PI.IMG_DATA, "
+                        + "P.PRICE, "
+                        + "C.QUANTITY "
+                        + "FROM CART_TB C "
+                        + "JOIN PRODUCT_TB P ON C.PRODUCT_FK = P.PRODUCT_PK "
+                        + "JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK "
+                        + "WHERE C.USER_FK = ? "
+                        + "GROUP BY P.PRODUCT_NM;";
             maria.query(query, [id], (err, data) => {
                 if(err) reject(`${err}`);
                 resolve(data);
