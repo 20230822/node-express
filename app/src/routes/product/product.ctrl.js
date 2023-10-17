@@ -67,11 +67,52 @@ const process = {
             res.status(500).json({success : false, msg : error});
         }
         
-        
-        //로그인 했으면 위시 리스트에 들어있는지 확인하고 
-        //없으면 넣어주고
-        //이미 들어 있으면 이미 들어있다고
-    }
+    },
+
+    addCart : async (req, res) =>{
+        try{
+            //쿠키의 토큰 받아서 로그인 했는지 확인
+            const token = req.cookies.accessToken;
+            //로그인 안했으면 로그인 하도록(fe)
+            
+            //로그인 했으면 위시 리스트에 들어있는지 확인하고 
+            const product = new Product(req.body);
+            const response = await product.addCart(token);
+            return res.status(200).json(response);
+        }catch(error){
+            res.status(500).json({success : false, msg : error});
+        }
+    },
+
+    delCart : async (req, res) =>{
+        try{
+            //쿠키의 토큰 받아서 로그인 했는지 확인
+            const token = req.cookies.accessToken;
+            //로그인 안했으면 로그인 하도록(fe)
+            
+            //로그인 했으면 위시 리스트에 들어있는지 확인하고 
+            const product = new Product(req.body);
+            const response = await product.delCart(token);
+            return res.status(200).json(response);
+        }catch(error){
+            res.status(500).json({success : false, msg : error});
+        }
+    },
+
+    addCartCount : async (req, res) =>{
+        try{
+            //쿠키의 토큰 받아서 로그인 했는지 확인
+            const token = req.cookies.accessToken;
+            //로그인 안했으면 로그인 하도록(fe)
+            
+            //로그인 했으면 위시 리스트에 들어있는지 확인하고 
+            const product = new Product(req.body);
+            const response = await product.addCartCount(token);
+            return res.status(200).json(response);
+        }catch(error){
+            res.status(500).json({success : false, msg : error});
+        }
+    },
 }
 module.exports = {
     process,

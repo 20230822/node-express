@@ -1,5 +1,6 @@
 //maria database require
 const maria = require('../database/connect/maria');
+//db query execute function
 const queryExe = require('./common');
 
 class ProductStorage{
@@ -107,6 +108,70 @@ class ProductStorage{
             conn.release();
         }
     }
+
+    /**
+     * token의 사용자에게 body의 상품을 사용자의 Cart에 추가
+     * @param {string} userId - 사용자 id
+     * @param {string} product - 상품 key값
+     * @returns {[any]} - success : 수행 성공여부 msg : 세부
+     */
+    static async addCart(userId, product){
+        let conn;
+        try{
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            //카트에 있는지 확인
+            const query1 = "SELECT COUNT(*) AS COUNT FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+            //카트에 없다면 추가
+            const query2 = "INSERT INTO CART_TB(USER_FK, PRODUCT_FK, QUANTITY ) VALUES(?, ?, ?)"; 
+            //카트에 있다면 수정
+            const query3 = "UPDATE CART_TB SET QUANTITY = ? WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+            
+            [rows, fields] = await conn.query(query1, [userId, product.productId]);
+            
+            const {COUNT : count} = rows[0];
+            if(count === 0){
+                await conn.query(query2, [userId, product.productId, product.quantity]);
+            }else{
+                await conn.query(query3, [product.quantity, userId, product.productId]);
+            }
+            await conn.commit();
+            return { success : true, msg : "트랜잭션 성공"};
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            return{ success : false, msg : "트랜잭션 오류"} ;
+        }finally{
+            conn.release();
+        }
+    }
+
+    static async delCart(userId, product){
+        const query = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        try{
+            await queryExe(query, [userId, product.productId]);
+            return {success : true};
+        }
+        catch(error){
+            return { success : false, msg : error } ;
+        }
+    }
+
+    static async addCartCount(userId, product){
+        const query = "UPDATE CART_TB SET QUANTITY = ? WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        try{
+            await queryExe(query, [product.quantity, userId, product.productId ]);
+            return {success : true};
+        }
+        catch(error){
+            return { success : false, msg : error } ;
+        }
+    }
+
+
+   
 }
 
 module.exports = ProductStorage;

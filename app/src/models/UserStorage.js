@@ -1,5 +1,6 @@
 //maria database require
 const maria = require('../database/connect/maria');
+//db query execute function
 const queryExe = require('./common');
 
 
