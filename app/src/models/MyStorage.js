@@ -6,7 +6,7 @@ class MyStorage{
 
     static getMypage(id) {
         return new Promise((resolve, reject) => {
-            const query = "SELECT USER_NM, USER_ID, USER_PROFILE FROM USER_TB WHERE USER_ID = ?;";
+            const query = "SELECT USER_NM, USER_ID, PROFILE_DATA FROM USER_TB WHERE USER_ID = ?;";
             maria.query(query, [id], (err, data) => {
                 if(err) reject(`${err}`);
                 resolve(data);
