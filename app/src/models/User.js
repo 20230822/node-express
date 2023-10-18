@@ -88,28 +88,18 @@ class User{
 
     static async notice(){
         try{
-            const notice = await UserStorage.getNotice().then(resp =>{
-                return resp ? resp : {};
-            });
-        
-            if (notice) return { success : true, data : notice };
-            return { success: false, msg: "공지사항에 게시글이 없습니다." };
-            
+            const notice = await UserStorage.getNotice();    
+            return { success : true, data : notice.data };            
         } catch(err) {
             return { success: false, msg : err };
         }
     }
 
     async detail(){
-        const client = this.body;
+        const page = this.body;
         try{
-            const detail = await UserStorage.getDetail(client).then(resp =>{
-                return resp ? resp : {};
-            });
-        
-            if (detail) return { success : true, data : detail };
-            return { success: false, msg: "해당 게시글을 불러오는데 실패했습니다." };
-            
+            const detail = await UserStorage.getDetail(page);
+            return { success : true, data : detail.data };         
         } catch(err) {
             return { success: false, msg : err };
         }
