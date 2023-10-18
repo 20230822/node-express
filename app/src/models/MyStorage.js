@@ -74,40 +74,37 @@ class MyStorage{
         }
     }
 
-    static putMyEdit(client, id) {
-        return new Promise((resolve, reject) => {
-            const query = "UPDATE USER_TB SET USER_NM = ?, PROFILE_TYPE = ?, PROFILE_DATA = ? WHERE USER_ID = ?;";
-            maria.query(query, [client.name, client.img_type, client.img_data, id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve({
-                    success : true
-                });
-            })
-        })
+    static async putMyEdit(client, id) {
+        const query = "UPDATE USER_TB SET USER_NM = ?, PROFILE_TYPE = ?, PROFILE_DATA = ? WHERE USER_ID = ?;";
+        try {
+            [rows, fields] = await queryExe(query, [client.name, client.img_type, client.img_data, id]);
+            if (rows) return {success : true, data: rows};
+            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+        } catch(error) {
+            return { success : false, msg : error };
+        }
     }
 
-    static delMyCart(client, id) {
-        return new Promise((resolve, reject) => {
-            const query = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
-            maria.query(query, [id, client.product_id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve({
-                    success : true
-                });
-            })
-        })
+    static async delMyCart(client, id) {
+        const query = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        try {
+            [rows, fields] = await queryExe(query, [id, client.product_id]);
+            if (rows) return {success : true, data: rows};
+            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+        } catch(error) {
+            return { success : false, msg : error };
+        }
     }
 
-    static delMyWishlist(client, id) {
-        return new Promise((resolve, reject) => {
-            const query = "DELETE FROM WISHLIST_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
-            maria.query(query, [id, client.product_id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve({
-                    success : true
-                });
-            })
-        })
+    static async delMyWishlist(client, id) {
+        const query = "DELETE FROM WISHLIST_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        try {
+            [rows, fields] = await queryExe(query, [id, client.product_id]);
+            if (rows) return {success : true, data: rows};
+            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+        } catch(error) {
+            return { success : false, msg : error };
+        }
     }
 }
 
