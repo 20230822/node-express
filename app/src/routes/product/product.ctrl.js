@@ -69,6 +69,19 @@ const process = {
         
     },
 
+    delWishList : async(req, res) =>{
+        try {
+            const token = req.cookies.accessToken;
+
+            const product =new Product(req.body);
+            const response = await product.delWishList(token);
+            return res.status(200).json(response);
+
+        } catch (error) {
+            res.status(500).json({success : false, msg : error});
+        }
+    },
+
     addCart : async (req, res) =>{
         try{
             //쿠키의 토큰 받아서 로그인 했는지 확인
@@ -83,6 +96,8 @@ const process = {
             res.status(500).json({success : false, msg : error});
         }
     },
+
+    
 
     delCart : async (req, res) =>{
         try{
