@@ -1,22 +1,22 @@
 //maria database require
 const maria = require('../database/connect/maria');
-
+const queryExe = require('./common');
 
 class MyStorage{
 
-    static getMypage(id) {
-        return new Promise((resolve, reject) => {
-            const query = "SELECT USER_NM, USER_ID, PROFILE_DATA FROM USER_TB WHERE USER_ID = ?;";
-            maria.query(query, [id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve(data);
-            })
-        })
+    static async getMypage(id) {
+        const query = "SELECT USER_NM, USER_ID, PROFILE_DATA FROM USER_TB WHERE USER_ID = ?;";
+        try{
+            [rows, fields] = await queryExe(query, [id]);
+            if (rows) return {success : true, data: rows};
+            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+        } catch(error) {
+            return { success : false, msg : error };
+        }
     }
 
-    static getMyCart(id) {
-        return new Promise((resolve, reject) => {
-            const query = "SELECT "
+    static async getMyCart(id) {
+        const query = "SELECT "
             + "P.PRODUCT_NM, "
             + "PI.IMG_DATA, "
             + "P.PRICE, "
@@ -26,47 +26,52 @@ class MyStorage{
             + "JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK "
             + "WHERE C.USER_FK = ? "
             + "GROUP BY P.PRODUCT_NM;";
-            maria.query(query, [id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve(data);
-            })
-        })
+        try{
+            [rows, fields] = await queryExe(query, [id]);
+            if (rows) return {success : true, data: rows};
+            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+        } catch(error) {
+            return { success : false, msg : error };
+        }
     }
 
-    static getMyWishlist(id) {
-        return new Promise((resolve, reject) => {
-            const query = "SELECT "
+    static async getMyWishlist(id) {
+        const query = "SELECT "
             + "W.PRODUCT_FK, "
             + "PI.IMG_DATA "
             + "FROM WISHLIST_TB W "
             + "JOIN PRODUCT_IMG_TB PI ON W.PRODUCT_FK = PI.PRODUCT_FK "
             + "WHERE W.USER_FK = ? "
             + "GROUP BY W.PRODUCT_FK;";
-            maria.query(query, [id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve(data);
-            })
-        })
+        try {
+            [rows, fields] = await queryExe(query, [id]);
+            if (rows) return {success : true, data: rows};
+            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+        } catch(error) {
+            return { success : false, msg : error };
+        }
     }
 
-    static getMyRecommended() {
-        return new Promise((resolve, reject) => {
-            const query = "SELECT * FROM RECOMMENDED_TB;";
-            maria.query(query, [id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve(data);
-            })
-        })
+    static async getMyRecommended() {
+        const query = "SELECT * FROM RECOMMENDED_TB;";
+        try {
+            [rows, fields] = await queryExe(query, []);
+            if (rows) return {success : true, data: rows};
+            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+        } catch(error) {
+            return { success : false, msg : error };
+        }
     }
 
-    static getMyOrder(id) {
-        return new Promise((resolve, reject) => {
-            const query = "SELECT * FROM ORDER_TB WHERE USER_FK = ?;";
-            maria.query(query, [id], (err, data) => {
-                if(err) reject(`${err}`);
-                resolve(data);
-            })
-        })
+    static async getMyOrder(id) {
+        const query = "SELECT * FROM ORDER_TB WHERE USER_FK = ?;";
+        try {
+            [rows, fields] = await queryExe(query, [id]);
+            if (rows) return {success : true, data: rows};
+            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+        } catch(error) {
+            return { success : false, msg : error };
+        }
     }
 
     static putMyEdit(client, id) {

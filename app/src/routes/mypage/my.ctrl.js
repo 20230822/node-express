@@ -55,8 +55,7 @@ const process = {
 
     recommended : async (req, res) => {
         try {
-            const response = await My.recommended(token);
-        
+            const response = await My.recommended();
             if (response.success === true) {
                 res.status(200).json(response);
             } else {
