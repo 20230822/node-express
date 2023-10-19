@@ -189,6 +189,20 @@ class Product{
         }
     }
     
+
+    static async category(body){
+        try{
+            const response = await ProductStorage.getCategory(body);
+            return {success : true, data : response};
+
+
+        }
+        catch(error){
+            return { success : false , msg : error};
+        }
+    }
+
+    
 }
 
 module.exports = Product;

@@ -41,22 +41,6 @@ class ProductStorage{
             return { success : false, msg : error } ;
         }
 
-        // return new Promise((resolve, reject) => {
-        //     const query = "INSERT INTO PRODUCT_TB(CARTEGORY_FK, STOCK_AMT, PRICE, PRODUCT_NM, COLOR, `DESCRIBE`, `HASHTAG`) VALUES(?, ?, ?, ?, ?, ?, ?);"
-        //     maria.query(query, [prod.category, prod.stock, prod.price, prod.name, prod.color, prod.describe, prod.hashtag]
-        //         , (err) =>{
-        //         if(err) reject(`${err}`);
-        //         console.log('insert product! ');
-        //         resolve({
-        //             success : true
-        //         });
-        //     });
-
-            
-        // });
-
-       
-
 
     }
     static async searchProduct(searchKeyword){
@@ -250,6 +234,44 @@ class ProductStorage{
         }
         catch(error){
             return { success : false, msg : error } ;
+        }
+    }
+
+    static async getCategory(product){
+
+        
+        //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
+        let conn;
+        try{
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            //카트에 있는지 확인
+            const query1 = "SELECT COUNT(*) AS COUNT FROM PRODUCT_TB WHERE CARTEGORY_FK = ?;";
+            //카트에 없다면 추가
+            const query2 = "SELECT P.PRODUCT_PK, P.CARTEGORY_FK, P.PRICE, I.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB I ON P.PRODUCT_PK = I.PRODUCT_FK WHERE CARTEGORY_FK = ? LIMIT ? OFFSET ?;";
+            
+            //카트에 있는지 확인
+            const [rows, fields] = await conn.query(query1, [product.category]);
+            
+            let {COUNT : pagesize} = rows[0]; //상품 갯수
+
+            pagesize =  Math.floor(pagesize/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
+            
+            const offset = (product.page -1) * pagesize;
+
+            console.log("pagesize " + pagesize + " offset " + offset );
+            const [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
+
+            await conn.commit();
+            return rows2;
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            throw Error('트랜잭션 오류') ;
+        }finally{
+            conn.release();
         }
     }
    
