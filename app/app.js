@@ -9,6 +9,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const cors = require('cors');
 
+var mainRouter = require('./src/routes/main/main');
 var userRouter = require('./src/routes/user/user');
 var myRouter = require('./src/routes/mypage/my');
 var productRouter = require('./src/routes/product/product');
@@ -47,6 +48,7 @@ app.use(bodyParser.urlencoded({
 })); // url을 통해 전달되는 데이터에 한글, 공백곽 같은 문자가 포함 될경우 제대로 인식하지 않는 문제 해결
 app.use(bodyParser.raw({ type: 'image/*' }));
 
+app.use('/api', mainRouter);
 app.use('/api', userRouter);
 app.use('/api/mypage', myRouter);
 app.use('/api/product', productRouter);

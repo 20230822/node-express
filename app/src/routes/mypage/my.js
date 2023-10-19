@@ -1,16 +1,16 @@
 var express = require('express');
 var router = express.Router();
-const my = require('./my.ctrl');
+const ctrl = require('./my.ctrl');
 
-router.post('/', my.process.mypage);
-router.post('/cart', my.process.cart);
-router.post('/wishlist', my.process.wishlist);
-router.post('/recommended', my.process.recommended);
-router.post('/order', my.process.order);
+router.post('/', ctrl.process.mypage);
+router.post('/cart', ctrl.process.cart);
+router.post('/wishlist', ctrl.process.wishlist);
+router.post('/recommended', ctrl.process.recommended);
+router.post('/order', ctrl.process.order);
 
-router.put('/edit', my.update.edit);
+router.put('/edit', ctrl.update.edit);
 
-router.delete('/cart', my.del.cart);
-router.delete('/wishlist', my.del.wishlist);
+router.delete('/cart', ctrl.del.cart);
+router.delete('/wishlist', ctrl.del.wishlist);
 
 module.exports = router;
