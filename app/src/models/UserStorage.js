@@ -16,12 +16,7 @@ class UserStorage{
         const query ="SELECT USER_ID, USER_PW FROM USER_TB WHERE USER_ID = ?;";
         try{
             [rows, fields] =  await queryExe(query, [id]);
-            if(rows)
-            {
-                console.log(rows[0]);
-                return rows[0];
-            }
-            throw Error('존재하지 않는 아이디입니다.');
+            return rows;
             
         }
         catch(error){
@@ -50,16 +45,6 @@ class UserStorage{
     }
 
     static async save(register){
-        // return new Promise((resolve, reject) => {
-        //     const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, PROFILE_TYPE, PROFILE_DATA) VALUES(?, ?, ?, ?, ?);";
-        //     maria.query(query, [register.id, register.psword, register.name, register.img_type, register.img_data]
-        //         , (err) => {
-        //         if(err) reject(`${err}`);
-        //         resolve({
-        //             success : true
-        //         });
-        //     });
-        // });   
 
         const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, PROFILE_TYPE, PROFILE_DATA) VALUES(?, ?, ?, ?, ?);";
         try{

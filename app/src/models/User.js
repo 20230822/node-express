@@ -11,9 +11,13 @@ class User{
     async login(req, res){
         const client = this.body;
         try {
-            const { USER_ID : id, USER_PW : psword } =  await UserStorage.getUserInfo(client.id);
-            if (id) {
-                // 입력된 비밀번호와 저장된 해시된 비밀번호 비교
+            const response =  await UserStorage.getUserInfo(client.id);
+            console.log(response);
+            if(response.length > 0)
+            {
+                const { USER_ID : id, USER_PW : psword } = response[0];
+               
+                //입력된 비밀번호와 저장된 해시된 비밀번호 비교
                 const isPasswordValid = bcrypt.compareSync(client.psword, psword);
                 const isIdValid = id === client.id;
 
@@ -31,7 +35,7 @@ class User{
                     ,{expiresIn: '24h' , issuer : 'realcold0'});
 
                     console.log("accessToken " +accessToken,"\n refreshToken " + refreshToken);
-                     
+                    
                     //토큰값 쿠키에 담아서 전송
                     res.cookie('accessToken', accessToken,{
                         secure : false, //http로
@@ -44,15 +48,17 @@ class User{
                     return { success : true , msg : "로그인 성공" };
                 }
                 return { success : false , msg : "비밀번호가 틀렸습니다." };
+                
+
             }
             return { success : false, msg : "존재하지 않는 아이디입니다." };
-
+            
         } catch (err) {
             return { success: false, msg : err };
         }
     }
 
-    async register(req, res){
+    async register(){
         const client  = this.body;
         try {
             // 글자수 제한 확인 및 비밀번호 조합 확인
@@ -60,15 +66,14 @@ class User{
                 return { success: false, msg: "아이디를 이메일 형식으로 입력해주세요." };
             }
             if (!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(client.psword)){  
-                return { success: false, mas: "'비밀번호는 숫자+영문자+특수문자 조합으로 8~25자로 설정하셔야 합니다." };
+                return { success: false, msg: "'비밀번호는 숫자+영문자+특수문자 조합으로 8~25자로 설정하셔야 합니다." };
             }
             
             // 아이디 존재 여부, 비밀번호 같은지 확인
-            const response = await UserStorage.getUserInfo(client.id).then(resp =>{
-                return resp ? resp : {};
-            });
+            const response = await UserStorage.getUserInfo(client.id);
 
-            if (response) {
+            console.log(response);
+            if (response.length === 0) { //아이디가 존재 하지 않는다면
                 if (client.psword == client['confirm_psword']) {
                     // 비밀번호 해시 생성
                     const saltRounds = 10; // 솔트 라운드 수 설정
