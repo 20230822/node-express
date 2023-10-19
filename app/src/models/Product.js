@@ -179,8 +179,19 @@ class Product{
 
     async main(){
         try{
-            console.log("왜 안되냐구우우ㅜ");
-            const response = await ProductStorage.getProductRand();
+            const response = await ProductStorage.getRandProduct();
+            return { success : true, data : response.data };
+
+        }
+        catch(error){
+            return{ success : false, msg: error };
+        }
+    }
+
+    async hashtag(){
+        const client = this.body;
+        try{
+            const response = await ProductStorage.getHashtagProduct(client);
             return { success : true, data : response.data };
 
         }

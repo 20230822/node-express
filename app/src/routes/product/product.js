@@ -13,7 +13,7 @@ router.delete('/delCart', ctrl.process.delCart);
 router.put('/addCartCount', ctrl.process.addCartCount);
 
 router.post('/main', ctrl.process.main);
-// router.post('/hashtag', ctrl.process.hash);
+router.post('/hashtag', ctrl.process.hashtag);
 
 
 router.post('/category', ctrl.process.category);

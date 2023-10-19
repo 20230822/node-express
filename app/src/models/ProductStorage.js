@@ -222,9 +222,8 @@ class ProductStorage{
         }
     }
 
-    static async getProductRand(){
+    static async getRandProduct(){
         const productCnt = 3;
-        // 신상품 개수 확인
         const query = "SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK GROUP BY rand(PRODUCT_PK) Limit ?;";
     
         try{
@@ -272,6 +271,22 @@ class ProductStorage{
             throw Error('트랜잭션 오류') ;
         }finally{
             conn.release();
+        }
+    }
+    
+    static async getHashtagProduct(client){
+        const productCnt = 5;
+        const query = "( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "
+          + "UNION ( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "
+          + "UNION ( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?);";
+    
+        try{
+            [rows, fields] = await queryExe(query, [client.hashtag1, productCnt, client.hashtag2, productCnt, client.hashtag, productCnt]);
+            console.log(rows);
+            return { success : true, data : rows };
+        }
+        catch(error){
+            return { success : false, msg : error } ;
         }
     }
    
