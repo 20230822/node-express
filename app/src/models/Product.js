@@ -80,6 +80,30 @@ class Product{
     }
 
     /**
+     * token의 사용자의 body의 상품을 위시리스트에서 제거
+     * @param {string} token - 사용자 accessToken 값
+     * @returns {boolean} - success : 수행 성공여부
+     */
+    async delWishList(token){
+        try{
+            const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
+            
+            const { USER_ID : id} = await UserStorage.getUserInfo(data.id);
+            if(data.id === id){//유저 맞을때
+                
+                const response = await ProductStorage.delWishList(id, this.body);
+                return response;
+            }
+            else{
+                return { success : false, msg : '만료'};
+            }
+        }
+        catch(error){
+            return{success : false, msg: error};
+        }
+    }
+
+    /**
      * token의 사용자에게 body의 상품을 사용자의 Cart에 추가
      * @param {string} token - 사용자 accessToken 값
      * @returns {boolean , string} - success : 수행 성공여부

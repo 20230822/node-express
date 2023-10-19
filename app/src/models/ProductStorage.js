@@ -90,13 +90,51 @@ class ProductStorage{
             conn = await maria.getConnection();
             await conn.beginTransaction();
 
-            const query1 = "INSERT INTO WISHLIST_TB(PRODUCT_FK, USER_FK) VALUES(?, ?);";
-            const query2 = "UPDATE PRODUCT_TB SET WISHLIST_CNT = WISHLIST_CNT + 1 WHERE PRODUCT_PK = ?;";
+            //위시리스트에 있는지 확인하고
+            const query1 = "SELECT COUNT(*) AS COUNT FROM WISHLIST_TB WHERE PRODUCT_FK = ? AND USER_FK = ?;";
+            const query2 = "INSERT INTO WISHLIST_TB(PRODUCT_FK, USER_FK) VALUES(?, ?);";
+            const query3 = "UPDATE PRODUCT_TB SET WISHLIST_CNT = WISHLIST_CNT + 1 WHERE PRODUCT_PK = ?;";
             
-            await conn.query(query1, [product.productId, userId]);
+
+            const[rows, fields] = await conn.query(query1, [product.productId, userId]);
+            const {COUNT : count} = rows[0];
+            console.log(count);
+            if(count === 0)//위시리시트에 존재하지 않는다면
+            {
+                await conn.query(query2, [product.productId, userId]);
+                await conn.query(query3, [product.productId]);
+            }
+            //존재하면 아무것도 안해
             
-            await conn.query(query2, [product.productId]);
+            await conn.commit();
+            return { success : true, msg : "트랜잭션 성공"};
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            return{ success : false, msg : "트랜잭션 오류"} ;
+        }finally{
+            conn.release();
+        }
+    }
+
+    static async delWishList(userId, product){
+        let conn;
+        try{
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            //위시리스트에 있는지 확인하고
+            const query1 = "SELECT * FROM WISHLIST_TB WHERE PRODUCT_FK = ? AND USER_FK = ?;";
+            //있으면 삭제
+            const query2 = "DELETE FROM WISHLIST_TB WHERE PRODUCT_FK = ? AND USER_FK = ?;";
+            //없으면 삭제 X
             
+            const [rows,  fields] = await conn.query(query1, [product.productId, userId]);
+            
+            if(rows){
+                await conn.query(query2, [product.productId, userId]);
+            }
             await conn.commit();
             return { success : true, msg : "트랜잭션 성공"};
 
@@ -149,13 +187,43 @@ class ProductStorage{
     }
 
     static async delCart(userId, product){
-        const query = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        // const query = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        // try{
+        //     await queryExe(query, [userId, product.productId]);
+        //     return {success : true};
+        // }
+        // catch(error){
+        //     return { success : false, msg : error } ;
+        // }
+
+        let conn;
         try{
-            await queryExe(query, [userId, product.productId]);
-            return {success : true};
-        }
-        catch(error){
-            return { success : false, msg : error } ;
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            //카트에 있는지 확인
+            const query1 = "SELECT COUNT(*) AS COUNT FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+            //카트에 없다면 추가
+            const query2 = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+            
+            //카트에 있는지 확인
+            [rows, fields] = await conn.query(query1, [userId, product.productId]);
+            
+            const {COUNT : count} = rows[0];
+
+            //카트에 없다면 추가
+            if(count !== 0 ){
+                await conn.query(query2, [userId, product.productId]);
+            }
+            await conn.commit();
+            return { success : true, msg : "트랜잭션 성공"};
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            return{ success : false, msg : "트랜잭션 오류"} ;
+        }finally{
+            conn.release();
         }
     }
 
