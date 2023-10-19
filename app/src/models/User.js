@@ -11,12 +11,10 @@ class User{
     async login(req, res){
         const client = this.body;
         try {
-            const response =  await UserStorage.getUserInfo(client.id);
-            console.log(response);
-            if(response.length > 0)
+            const { USER_ID : id, USER_PW : psword} =  await UserStorage.getUserInfo(client.id)
+            console.log(id);
+            if(id)
             {
-                const { USER_ID : id, USER_PW : psword } = response[0];
-               
                 //입력된 비밀번호와 저장된 해시된 비밀번호 비교
                 const isPasswordValid = bcrypt.compareSync(client.psword, psword);
                 const isIdValid = id === client.id;
@@ -49,7 +47,6 @@ class User{
                 }
                 return { success : false , msg : "비밀번호가 틀렸습니다." };
                 
-
             }
             return { success : false, msg : "존재하지 않는 아이디입니다." };
             
@@ -70,10 +67,9 @@ class User{
             }
             
             // 아이디 존재 여부, 비밀번호 같은지 확인
-            const response = await UserStorage.getUserInfo(client.id);
+            const { USER_ID : id }  = await UserStorage.getUserInfo(client.id);
 
-            console.log(response);
-            if (response.length === 0) { //아이디가 존재 하지 않는다면
+            if (!id) { //아이디가 존재 하지 않는다면
                 if (client.psword == client['confirm_psword']) {
                     // 비밀번호 해시 생성
                     const saltRounds = 10; // 솔트 라운드 수 설정

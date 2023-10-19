@@ -212,13 +212,37 @@ class ProductStorage{
     }
 
     static async addCartCount(userId, product){
-        const query = "UPDATE CART_TB SET QUANTITY = ? WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        
+        //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
+        let conn;
         try{
-            await queryExe(query, [product.quantity, userId, product.productId ]);
-            return {success : true};
-        }
-        catch(error){
-            return { success : false, msg : error } ;
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            //해당 카테고리 상품 총갯수
+            const query1 = "SELECT COUNT(*) AS COUNT FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;;";
+            //해당 유저의 상품 카트 갯수 수정
+            const query2 = "UPDATE CART_TB SET QUANTITY = ? WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+            
+            const [rows, fields] = await conn.query(query1, [userId, product.productId ]);
+            const {COUNT : count} = rows[0]; 
+            console.log(count);
+            if(count !== 0){//상품이 있다면
+                await conn.query(query2, [product.quantity, userId, product.productId ]);
+            }
+            else{
+                throw Error('존재 하지 않는 카트리스트입니다.')
+            }
+
+            await conn.commit();
+            return {success : true,  msg : "트랜잭션 완료"}
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            throw error;
+        }finally{
+            conn.release();
         }
     }
 
@@ -237,8 +261,6 @@ class ProductStorage{
     }
 
     static async getCategory(product){
-
-        
         //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
         let conn;
         try{

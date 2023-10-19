@@ -16,11 +16,15 @@ class UserStorage{
         const query ="SELECT USER_ID, USER_PW FROM USER_TB WHERE USER_ID = ?;";
         try{
             [rows, fields] =  await queryExe(query, [id]);
+            if(rows.length > 0) //값이 있다면
+            {
+                return rows[0];
+            }
             return rows;
             
         }
         catch(error){
-            throw error;
+            throw Error('getUerInfo error');
         }
 
         // try{

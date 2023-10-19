@@ -173,7 +173,8 @@ class Product{
             }
         }
         catch(error){ //카트에 없다면 에러
-            return{success : false, msg: error};
+            console.log(error);
+            return{success : false, msg: error.message};
         }
     }
 
@@ -205,7 +206,6 @@ class Product{
         try{
             const response = await ProductStorage.getCategory(body);
             return {success : true, data : response};
-
 
         }
         catch(error){
