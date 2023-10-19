@@ -128,6 +128,24 @@ const process = {
             res.status(500).json({success : false, msg : error});
         }
     },
+
+
+    main : async (req, res) => {
+        try {
+            const product = new Product();
+            const response = await product.main();
+
+            if (response.success === true){
+                res.status(200).json(response);
+            } else {
+                res.status(401).json(response.msg);
+            }
+
+        } catch(error) {
+            console.log(error);
+            res.status(500).json();
+        }
+    },
 }
 module.exports = {
     process,

@@ -176,6 +176,18 @@ class Product{
             return{success : false, msg: error};
         }
     }
+
+    async main(){
+        try{
+            console.log("왜 안되냐구우우ㅜ");
+            const response = await ProductStorage.getProductRand();
+            return { success : true, data : response.data };
+
+        }
+        catch(error){
+            return{ success : false, msg: error };
+        }
+    }
     
 }
 
