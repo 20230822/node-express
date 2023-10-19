@@ -76,8 +76,8 @@ class UserStorage{
     static async getNotice(){
         const query = "SELECT NOTICE_PK, USER_NM, TITLE, WRITE_DT FROM NOTICE_TB, USER_TB WHERE USER_FK = USER_ID;";
         try{
-            await queryExe(query, []);
-            return { success : true } ;
+            [rows, fields] = await queryExe(query, []);
+            return { success : true, data : rows } ;
         }
         catch(error){
             throw error;
@@ -88,7 +88,7 @@ class UserStorage{
         const query = "SELECT USER_NM, TITLE, CONTENT, WRITE_DT FROM NOTICE_TB, USER_TB WHERE USER_FK = USER_ID AND NOTICE_PK = ?;";
         try{
             await queryExe(query, [page]);
-            return { success : true } ;
+            return { success : true, data : rows } ;
         }
         catch(error){
             throw error;
