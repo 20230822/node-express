@@ -41,22 +41,6 @@ class ProductStorage{
             return { success : false, msg : error } ;
         }
 
-        // return new Promise((resolve, reject) => {
-        //     const query = "INSERT INTO PRODUCT_TB(CARTEGORY_FK, STOCK_AMT, PRICE, PRODUCT_NM, COLOR, `DESCRIBE`, `HASHTAG`) VALUES(?, ?, ?, ?, ?, ?, ?);"
-        //     maria.query(query, [prod.category, prod.stock, prod.price, prod.name, prod.color, prod.describe, prod.hashtag]
-        //         , (err) =>{
-        //         if(err) reject(`${err}`);
-        //         console.log('insert product! ');
-        //         resolve({
-        //             success : true
-        //         });
-        //     });
-
-            
-        // });
-
-       
-
 
     }
     static async searchProduct(searchKeyword){
@@ -252,6 +236,43 @@ class ProductStorage{
         }
     }
 
+    static async getCategory(product){
+
+        
+        //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
+        let conn;
+        try{
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            //해당 카테고리 상품 총갯수
+            const query1 = "SELECT COUNT(*) AS COUNT FROM PRODUCT_TB WHERE CARTEGORY_FK = ?;";
+            //해당카테고리 정보 페이징 해서 가져오기 limit offset
+            const query2 = "SELECT P.PRODUCT_PK, P.CARTEGORY_FK, P.PRICE, I.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB I ON P.PRODUCT_PK = I.PRODUCT_FK WHERE CARTEGORY_FK = ? LIMIT ? OFFSET ?;";
+            
+            const [rows, fields] = await conn.query(query1, [product.category]);
+            
+            let {COUNT : pagesize} = rows[0]; //상품 갯수
+
+            pagesize =  Math.floor(pagesize/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
+            
+            const offset = (product.page -1) * pagesize;
+
+            console.log("pagesize " + pagesize + " offset " + offset );
+            const [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
+
+            await conn.commit();
+            return rows2;
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            throw Error('트랜잭션 오류') ;
+        }finally{
+            conn.release();
+        }
+    }
+    
     static async getHashtagProduct(client){
         const productCnt = 5;
         const query = "( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "

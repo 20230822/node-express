@@ -15,4 +15,6 @@ router.put('/addCartCount', ctrl.process.addCartCount);
 router.post('/main', ctrl.process.main);
 router.post('/hashtag', ctrl.process.hashtag);
 
+
+router.post('/category', ctrl.process.category);
 module.exports = router;
