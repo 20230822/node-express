@@ -17,9 +17,6 @@ class My{
                 const mypage = await MyStorage.getMypage(id);
                 return { success : true, data : mypage.data };
             }
-            else {
-                return { success : false, msg : '만료' };
-            }  
 
         } catch(err) {
             return { success: false, msg : err };
@@ -35,9 +32,6 @@ class My{
                 const myCart = await MyStorage.getMyCart(id);
                 return { success : true, data : myCart.data };
             }
-            else {
-                return { success : false, msg : '만료'};
-            }  
 
         } catch(err) {
             return { success: false, msg : err };
@@ -53,9 +47,6 @@ class My{
                 const myWishlist = await MyStorage.getMyWishlist(id);
                 return { success : true, data : myWishlist.data };
             }
-            else{
-                return { success : false, msg : '만료'};
-            }   
 
         } catch(err) {
             return { success: false, msg : err };
@@ -66,6 +57,7 @@ class My{
         try {
             const myRecommended = await MyStorage.getMyRecommended();
             return { success : true, data : myRecommended.data };
+
         } catch(err) {
             return { success: false, msg : err };
         }
@@ -79,10 +71,7 @@ class My{
             if (data.id == id) {
                 const myOrder = await MyStorage.getMyOrder(id);
                 return { success : true, data : myOrder.data };
-            }
-            else {
-                return { success : false, msg : '만료' };
-            }   
+            }  
             
         } catch(err) {
             return { success: false, msg : err };
@@ -96,12 +85,9 @@ class My{
             const { USER_ID : id } = await UserStorage.getUserInfo(data.id);
 
             if (data.id == id) {
-                const myEdit = await MyStorage.putMyEdit(client, id);
+                await MyStorage.putMyEdit(client, id);
                 return { success : true, msg : "회원정보 수정이 완료되었습니다." };
-            }
-            else {
-                return { success : false, msg : '만료' };
-            }   
+            } 
             
         } catch(err) {
             return { success: false, msg : err };
@@ -115,12 +101,9 @@ class My{
             const { USER_ID : id } = await UserStorage.getUserInfo(data.id);
 
             if (data.id == id) {
-                const myCart = await MyStorage.delMyCart(client, id);
+                await MyStorage.delMyCart(client, id);
                 return { success : true, msg : "장바구니 내역을 삭제하였습니다." };
-            }
-            else {
-                return { success : false, msg : '만료' };
-            }   
+            }  
             
         } catch(err) {
             return { success: false, msg : err };
@@ -134,12 +117,9 @@ class My{
             const { USER_ID : id } = await UserStorage.getUserInfo(data.id);
 
             if (data.id == id) {
-                const myWishlist = await MyStorage.delMyWishlist(client, id);
+                await MyStorage.delMyWishlist(client, id);
                 return { success : true, msg : "관심상품 내역을 삭제하였습니다." };
             }
-            else {
-                return { success : false, msg : '만료' };
-            }   
             
         } catch(err) {
             return { success: false, msg : err };
