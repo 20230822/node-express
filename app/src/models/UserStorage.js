@@ -16,16 +16,15 @@ class UserStorage{
         const query ="SELECT USER_ID, USER_PW FROM USER_TB WHERE USER_ID = ?;";
         try{
             [rows, fields] =  await queryExe(query, [id]);
-            if(rows)
+            if(rows.length > 0) //값이 있다면
             {
-                console.log(rows[0]);
                 return rows[0];
             }
-            throw Error('존재하지 않는 아이디입니다.');
+            return rows;
             
         }
         catch(error){
-            throw error;
+            throw Error('getUerInfo error');
         }
 
         // try{
@@ -50,16 +49,6 @@ class UserStorage{
     }
 
     static async save(register){
-        // return new Promise((resolve, reject) => {
-        //     const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, PROFILE_TYPE, PROFILE_DATA) VALUES(?, ?, ?, ?, ?);";
-        //     maria.query(query, [register.id, register.psword, register.name, register.img_type, register.img_data]
-        //         , (err) => {
-        //         if(err) reject(`${err}`);
-        //         resolve({
-        //             success : true
-        //         });
-        //     });
-        // });   
 
         const query = "INSERT INTO USER_TB(USER_ID, USER_PW, USER_NM, PROFILE_TYPE, PROFILE_DATA) VALUES(?, ?, ?, ?, ?);";
         try{
@@ -76,8 +65,8 @@ class UserStorage{
     static async getNotice(){
         const query = "SELECT NOTICE_PK, USER_NM, TITLE, WRITE_DT FROM NOTICE_TB, USER_TB WHERE USER_FK = USER_ID;";
         try{
-            await queryExe(query, []);
-            return { success : true } ;
+            [rows, fields] = await queryExe(query, []);
+            return { success : true, data : rows } ;
         }
         catch(error){
             throw error;
@@ -88,7 +77,7 @@ class UserStorage{
         const query = "SELECT USER_NM, TITLE, CONTENT, WRITE_DT FROM NOTICE_TB, USER_TB WHERE USER_FK = USER_ID AND NOTICE_PK = ?;";
         try{
             await queryExe(query, [page]);
-            return { success : true } ;
+            return { success : true, data : rows } ;
         }
         catch(error){
             throw error;

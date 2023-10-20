@@ -41,22 +41,6 @@ class ProductStorage{
             return { success : false, msg : error } ;
         }
 
-        // return new Promise((resolve, reject) => {
-        //     const query = "INSERT INTO PRODUCT_TB(CARTEGORY_FK, STOCK_AMT, PRICE, PRODUCT_NM, COLOR, `DESCRIBE`, `HASHTAG`) VALUES(?, ?, ?, ?, ?, ?, ?);"
-        //     maria.query(query, [prod.category, prod.stock, prod.price, prod.name, prod.color, prod.describe, prod.hashtag]
-        //         , (err) =>{
-        //         if(err) reject(`${err}`);
-        //         console.log('insert product! ');
-        //         resolve({
-        //             success : true
-        //         });
-        //     });
-
-            
-        // });
-
-       
-
 
     }
     static async searchProduct(searchKeyword){
@@ -228,17 +212,104 @@ class ProductStorage{
     }
 
     static async addCartCount(userId, product){
-        const query = "UPDATE CART_TB SET QUANTITY = ? WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        
+        //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
+        let conn;
         try{
-            await queryExe(query, [product.quantity, userId, product.productId ]);
-            return {success : true};
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            //해당 카테고리 상품 총갯수
+            const query1 = "SELECT COUNT(*) AS COUNT FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;;";
+            //해당 유저의 상품 카트 갯수 수정
+            const query2 = "UPDATE CART_TB SET QUANTITY = ? WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+            
+            const [rows, fields] = await conn.query(query1, [userId, product.productId ]);
+            const {COUNT : count} = rows[0]; 
+            console.log(count);
+            if(count !== 0){//상품이 있다면
+                await conn.query(query2, [product.quantity, userId, product.productId ]);
+            }
+            else{
+                throw Error('존재 하지 않는 카트리스트입니다.')
+            }
+
+            await conn.commit();
+            return {success : true,  msg : "트랜잭션 완료"}
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            throw error;
+        }finally{
+            conn.release();
+        }
+    }
+
+    static async getRandProduct(){
+        const productCnt = 3;
+        const query = "SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK GROUP BY rand(PRODUCT_PK) Limit ?;";
+    
+        try{
+            [rows, fields] = await queryExe(query, [productCnt]);
+
+            return { success : true, data : rows };
         }
         catch(error){
             return { success : false, msg : error } ;
         }
     }
 
+    static async getCategory(product){
+        //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
+        let conn;
+        try{
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
 
+            //해당 카테고리 상품 총갯수
+            const query1 = "SELECT COUNT(*) AS COUNT FROM PRODUCT_TB WHERE CARTEGORY_FK = ?;";
+            //해당카테고리 정보 페이징 해서 가져오기 limit offset
+            const query2 = "SELECT P.PRODUCT_PK, P.CARTEGORY_FK, P.PRICE, I.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB I ON P.PRODUCT_PK = I.PRODUCT_FK WHERE CARTEGORY_FK = ? LIMIT ? OFFSET ?;";
+            
+            const [rows, fields] = await conn.query(query1, [product.category]);
+            
+            let {COUNT : pagesize} = rows[0]; //상품 갯수
+
+            pagesize =  Math.floor(pagesize/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
+            
+            const offset = (product.page -1) * pagesize;
+
+            console.log("pagesize " + pagesize + " offset " + offset );
+            const [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
+
+            await conn.commit();
+            return rows2;
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            throw Error('트랜잭션 오류') ;
+        }finally{
+            conn.release();
+        }
+    }
+    
+    static async getHashtagProduct(client){
+        const productCnt = 5;
+        const query = "( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "
+          + "UNION ( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "
+          + "UNION ( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?);";
+    
+        try{
+            [rows, fields] = await queryExe(query, [client.hashtag1, productCnt, client.hashtag2, productCnt, client.hashtag, productCnt]);
+            console.log(rows);
+            return { success : true, data : rows };
+        }
+        catch(error){
+            return { success : false, msg : error } ;
+        }
+    }
    
 }
 

@@ -11,4 +11,6 @@ router.delete('/delWishList', ctrl.process.delWishList);
 router.post('/addCart', ctrl.process.addCart);
 router.delete('/delCart', ctrl.process.delCart);
 router.put('/addCartCount', ctrl.process.addCartCount);
+
+router.post('/category', ctrl.process.category);
 module.exports = router;

@@ -11,9 +11,9 @@ const process = {
             const response = await My.mypage(token);
 
             if (response.success === true) {
-                res.status(200).json(response);
+                res.status(201).json(response);
             } else {
-                res.status(500).json(response.msg);
+                res.status(401).json(response.msg);
             }
 
         } catch {
@@ -27,9 +27,9 @@ const process = {
             const response = await My.cart(token);
 
             if (response.success === true) {
-                res.status(200).json(response);
+                res.status(201).json(response);
             } else {
-                res.status(500).json(response.msg);
+                res.status(401).json(response.msg);
             }
 
         } catch {
@@ -43,9 +43,9 @@ const process = {
             const response = await My.wishlist(token);
           
             if (response.success === true) {
-                res.status(200).json(response);
+                res.status(201).json(response);
             } else {
-                res.status(500).json(response.msg);
+                res.status(401).json(response.msg);
             }
 
         } catch {
@@ -57,7 +57,7 @@ const process = {
         try {
             const response = await My.recommended();
             if (response.success === true) {
-                res.status(200).json(response);
+                res.status(201).json(response);
             } else {
                 res.status(500).json(response.msg);
             }
@@ -73,9 +73,9 @@ const process = {
             const response = await My.order(token);
        
             if (response.success === true) {
-                res.status(200).json(response);
+                res.status(201).json(response);
             } else {
-                res.status(500).json(response.msg);
+                res.status(401).json(response.msg);
             }
 
         } catch {
@@ -95,7 +95,7 @@ const update = {
             if (response.success === true){
                 res.status(200).json(response);
             } else {
-                res.status(500).json(response.msg);
+                res.status(401).json(response.msg);
             }
 
         } catch {
@@ -115,7 +115,7 @@ const del = {
             if (response.success === true){
                 res.status(200).json(response);
             } else {
-                res.status(500).json(response.msg);
+                res.status(401).json(response.msg);
             }
 
         } catch {
@@ -132,7 +132,7 @@ const del = {
             if (response.success === true){
                 res.status(200).json(response);
             } else {
-                res.status(500).json(response.msg);
+                res.status(401).json(response.msg);
             }
 
         } catch {
