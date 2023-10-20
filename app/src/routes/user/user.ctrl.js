@@ -80,10 +80,10 @@ const process = {
         }
     },
 
-    loginSuccess : (req, res) =>{
+    loginSuccess : async (req, res) =>{
         try {
             const token = req.cookies.accessToken;
-            const response = User.loginSuccess(token);
+            const response = await User.loginSuccess(token);
 
             if(response.success === true){
                 res.status(200).json(id);
