@@ -45,6 +45,8 @@ jobs:
                   value: ${{ secrets.SECRET_ACCESS_KEY }}
                 - name: SECRET_REFRESH_KEY
                   value: ${{ secrets.SECRET_REFRESH_KEY }}
+                - name: SERVER_HOST
+                  value: ${{ secrets.SERVER_HOST }}
               ports: 3000
               install: npm ci --production
               start: npm start
