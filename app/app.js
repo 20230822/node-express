@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({
   origin :'http://localhost:3000',
-  methods : ['GET', 'POST', 'PUT', 'DELETE'],
+  methods : ['GET', 'POST', 'PUT'],
   credentials : true //쿠키 사용
 }));
 
