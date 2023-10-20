@@ -19,7 +19,7 @@ class My{
             }
 
         } catch(err) {
-            return { success: false, msg : err };
+            return { success: false, msg : "재로그인 필요" };
         }
     }
 
