@@ -36,13 +36,13 @@ class User{
                     
                     //토큰값 쿠키에 담아서 전송
                     res.cookie('accessToken', accessToken,{
-                        secure : true, //http로
+                        secure : true, //https로
                         httpOnly : true, //js에서 쿠키 접근 불가능
                         sameSite: 'None',
 
                     });
                     res.cookie('refreshToken', refreshToken,{
-                        secure : true, //http로
+                        secure : true, //https로
                         httpOnly : true, //js에서 쿠키 접근 불가능
                         sameSite: 'None',
                     });
