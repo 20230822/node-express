@@ -75,27 +75,89 @@ class MyStorage{
     }
 
     static async putMyEdit(client, id) {
-        const query = "UPDATE USER_TB SET USER_NM = ?, PROFILE_TYPE = ?, PROFILE_DATA = ? WHERE USER_ID = ?;";
+        let conn;
         try {
-            [rows, fields] = await queryExe(query, [client.name, client.img_type, client.img_data, id]);
-            if (rows) return {success : true, data: rows};
-            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            const check_query = "SELECT COUNT(*) AS COUNT FROM USER_TB WHERE USER_ID = ?;";
+            const update_query = "UPDATE USER_TB SET USER_NM = ?, PROFILE_TYPE = ?, PROFILE_DATA = ? WHERE USER_ID = ?;";
+
+            const [ rows, fields ] = await conn.query(check_query, [id]);
+            const { COUNT : count } = rows[0];
+
+            if (count === 0) {
+                await conn.query(update_query, [client.name, client.img_type, client.img_data, id]);   
+            }
+            
+            await conn.commit();
+            return { success : false, msg : "트랜잭션 성공" };
+            
         } catch(error) {
-            return { success : false, msg : error };
+            await conn.rollback();
+            return { success : false, msg : "트랜잭션 오류" };
+
+        } finally {
+            conn.relase();
         }
     }
 
     static async delMyCart(client, id) {
-        const query = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+        let conn;
         try {
-            [rows, fields] = await queryExe(query, [id, client.product_id]);
-            if (rows) return {success : true, data: rows};
-            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            const check_query = "SELECT COUNT(*) AS COUNT FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ? ;";
+            const delete_query = "DELETE FROM CART_TB WHERE USER_FK = ? AND PRODUCT_FK = ? ;";
+
+            const [rows, fields] = await conn.query(check_query, [id, client.product_id]);
+            const { COUNT : count } = rows[0];
+
+            if (count !== 0) {
+                await conn.query(delete_query, [id, client.product_id]);
+            }
+
+            await conn.commit();
+            return { success : true, msg : "트랜잭션 성공" };
+
         } catch(error) {
-            return { success : false, msg : error };
+            await conn.rollback();
+            return { success : false, msg : "트랜잭션 오류" };
+        
+        } finally {
+            conn.relase();
         }
     }
 
+    static async delMyWishlist(client, id) {
+        let conn;
+        try {
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            const check_query = "SELECT COUNT(*) AS COUNT FROM WISHLIST WHERE USER_FK = ? AND PRODUCT_FK = ? ;";
+            const delete_query = "DELETE FROM WISHLIST_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
+
+            const [rows, fields] = await conn.query(check_query, [id, client.product_id]);
+            const {COUNT : count} = rows[0];
+
+            if (count !== 0) {
+                await conn.query(delete_query, [id, client.product_id]);
+            }
+
+            await conn.commit();
+            return { success : true, msg : "트랜잭션 성공" };
+
+        } catch(error) {
+            await conn.rollback();
+            return { success : false, msg : "트랜잭션 오류" };
+        } finally {
+            conn.relase();
+        }
+    }
+
+    /*
     static async delMyWishlist(client, id) {
         const query = "DELETE FROM WISHLIST_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
         try {
@@ -106,6 +168,7 @@ class MyStorage{
             return { success : false, msg : error };
         }
     }
+    */
 }
 
 module.exports = MyStorage;
