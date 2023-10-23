@@ -51,9 +51,7 @@ jobs:
                   value: ${{ secrets.SSL_KEY }}
                 - name : SSL_CERT
                   value: ${{ secrets.SSL_CERT }}
-              ports:
-                - "3000:3000"
-                - "443:443"
+              ports: 3000
               install: npm ci --production
               start: npm start
             context:
