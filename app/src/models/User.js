@@ -38,13 +38,13 @@ class User{
                     res.cookie('accessToken', accessToken,{
                         secure : true, //https로
                         httpOnly : true, //js에서 쿠키 접근 불가능
-                        sameSite: 'None',
+                        sameSite: true,
 
                     });
                     res.cookie('refreshToken', refreshToken,{
                         secure : true, //https로
                         httpOnly : true, //js에서 쿠키 접근 불가능
-                        sameSite: 'None',
+                        sameSite: true,
                     });
                     return { success : true , msg : "로그인 성공" };
                 }
@@ -54,6 +54,7 @@ class User{
             return { success : false, msg : "존재하지 않는 아이디입니다." };
             
         } catch (err) {
+            console.error(err);
             return { success: false, msg : err.message };
         }
     }

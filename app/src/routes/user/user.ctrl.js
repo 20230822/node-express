@@ -65,9 +65,9 @@ const process = {
 
           if(response.success === true){
             res.cookie('accessToken', response.accessToken,{
-                secure : false, //http로
+                secure : true, //http로
                 httpOnly : true, //js에서 쿠키 접근 불가능
-                sameSite: 'None'
+                sameSite: true
             });
 
             res.status(200).json('Access Token Recreated');
