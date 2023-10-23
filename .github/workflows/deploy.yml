@@ -47,6 +47,10 @@ jobs:
                   value: ${{ secrets.SECRET_REFRESH_KEY }}
                 - name: SERVER_HOST
                   value: ${{ secrets.SERVER_HOST }}
+                - name : SSL_KEY
+                  value: ${{ secrets.SSL_KEY }}
+                - name : SSL_CERT
+                  value: ${{ secrets.SSL_CERT }}
               ports:
                 - "3000:3000"
                 - "443:443"

@@ -36,8 +36,8 @@ server.on('listening', onListening);
 
 
 const options = {
-  key: fs.readFileSync(path.join(__dirname, '../cert', 'localhost+2-key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, '../cert','localhost+2.pem'))
+  key: process.env.SSL_KEY,
+  cert: process.env.SSL_CERT
 };
 
 
