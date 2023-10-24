@@ -270,9 +270,7 @@ class ProductStorage{
             //해당 카테고리 상품 총갯수
             const query1 = "SELECT COUNT(*) AS COUNT FROM PRODUCT_TB WHERE CARTEGORY_FK = ?;";
             //해당카테고리 정보 페이징 해서 가져오기 limit offset
-            const query2 = "SELECT P.PRODUCT_PK, P.CARTEGORY_FK, P.PRICE, I.IMG_DATA FROM PRODUCT_TB P "+
-            "JOIN (SELECT PRODUCT_FK, IMG_DATA FROM PRODUCT_IMG_TB WHERE P.PRODUCT_PK = PRODUCT_FK LIMIT 1) I ON P.PRODUCT_PK = I.PRODUCT_FK "+
-            "WHERE CARTEGORY_FK = ? LIMIT ? OFFSET ?;";
+            const query2 = "SELECT P.PRODUCT_PK, P.CARTEGORY_FK, P.PRICE, (SELECT IMG_DATA FROM project.PRODUCT_IMG_TB WHERE PRODUCT_FK = P.PRODUCT_PK LIMIT 1 ) AS IMG_DATA FROM PRODUCT_TB P WHERE CARTEGORY_FK = ? LIMIT ? OFFSET ?;";
             
             const [rows, fields] = await conn.query(query1, [product.category]);
             
