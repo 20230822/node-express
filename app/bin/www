@@ -7,9 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('myapp:server');
 var http = require('http');
-var path = require('path');
-const https = require('https');
-const fs = require('fs');
+
+
 
 /**
  * Get port from environment and store in Express.
@@ -34,16 +33,6 @@ server.listen(port, () =>{
 server.on('error', onError);
 server.on('listening', onListening);
 
-
-const options = {
-  key: process.env.SSL_KEY,
-  cert: process.env.SSL_CERT
-};
-
-
-https.createServer(options, app).listen(443, () =>{
-  console.log('https 서버 가동');
-})
 
 
 /**
