@@ -38,13 +38,13 @@ class User{
                     res.cookie('accessToken', accessToken,{
                         secure : true, //https로
                         httpOnly : true, //js에서 쿠키 접근 불가능
-                        sameSite: true,
+                        sameSite: 'None',
 
                     });
                     res.cookie('refreshToken', refreshToken,{
                         secure : true, //https로
                         httpOnly : true, //js에서 쿠키 접근 불가능
-                        sameSite: true,
+                        sameSite: 'None',
                     });
                     return { success : true , msg : "로그인 성공" };
                 }
