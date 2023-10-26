@@ -24,7 +24,7 @@ class User{
                     const accessToken = jwt.sign({
                         id
                     },process.env.SECRET_ACCESS_KEY
-                    ,{expiresIn: '5m' , issuer : 'realcold0'});
+                    ,{expiresIn: '30m' , issuer : 'realcold0'});
 
                     //refresh Token 발급
                     const refreshToken = jwt.sign({
