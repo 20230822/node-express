@@ -136,7 +136,7 @@ class User{
                     id
                 }
                 , process.env.SECRET_ACCESS_KEY
-                , { expiresIn : '5m' , issuer : 'realcold0' }
+                , { expiresIn : '30m' , issuer : 'realcold0' }
                 );
 
                 //토큰값 쿠키에 담아서 전송
