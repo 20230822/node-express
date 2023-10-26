@@ -86,14 +86,15 @@ const process = {
             const response = await User.loginSuccess(token);
 
             if(response.success === true){
-                res.status(200).json(id);
+                res.status(200).json(response);
             }else{
-                res.status(500).json(response.msg);
+                res.status(500).json(response);
             }
             
             
         } catch (error) {
-            res.status(500).json('ctrl오류');
+            console.log(error);
+            res.status(500).json(error.message);
         }
     
     },
