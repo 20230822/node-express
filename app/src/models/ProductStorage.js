@@ -325,7 +325,7 @@ class ProductStorage{
                 const [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
     
                 await conn.commit();
-                const response = {count : rows[0], data : rows2}
+                const response = {count : rows[0], products : rows2}
                 return response;
     
             }catch(error){
