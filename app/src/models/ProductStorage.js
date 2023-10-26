@@ -278,9 +278,9 @@ class ProductStorage{
                 
                 const [rows, fields] = await conn.query(query1, [`${upperCategory}_`]);
                 
-                let {COUNT : pagesize} = rows[0]; //상품 갯수
+                let {COUNT : count} = rows[0]; //상품 갯수
     
-                pagesize =  Math.floor(pagesize/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
+                const pagesize =  Math.floor(count/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
                 
                 const offset = (product.page -1) * pagesize;
     
@@ -288,7 +288,7 @@ class ProductStorage{
                 const [rows2, fields2]  =  await conn.query(query2, [`${upperCategory}_`, product.pageListSize, offset]);
     
                 await conn.commit();
-                const response = {count: rows[0] ,products : rows2}
+                const response = {count: count ,products : rows2}
                 return response;
     
             }catch(error){
@@ -315,9 +315,9 @@ class ProductStorage{
 
                 const [rows, fields] = await conn.query(query1, [product.category]);
                 
-                let {COUNT : pagesize} = rows[0]; //상품 갯수
+                let {COUNT : count} = rows[0]; //상품 갯수
     
-                pagesize =  Math.floor(pagesize/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
+                const pagesize =  Math.floor(count/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
                 
                 const offset = (product.page -1) * pagesize;
     
@@ -325,7 +325,7 @@ class ProductStorage{
                 const [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
     
                 await conn.commit();
-                const response = {count : rows[0], products : rows2}
+                const response = {count : count, products : rows2}
                 return response;
     
             }catch(error){
