@@ -209,7 +209,8 @@ class Product{
 
         }
         catch(error){
-            return { success : false , msg : error};
+            console.log(error);
+            return { success : false , msg : error.message};
         }
     }
 

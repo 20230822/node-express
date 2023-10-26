@@ -261,38 +261,83 @@ class ProductStorage{
     }
 
     static async getCategory(product){
-        //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
-        let conn;
-        try{
-            conn = await maria.getConnection();
-            await conn.beginTransaction();
-
-            //해당 카테고리 상품 총갯수
-            const query1 = "SELECT COUNT(*) AS COUNT FROM PRODUCT_TB WHERE CARTEGORY_FK = ?;";
-            //해당카테고리 정보 페이징 해서 가져오기 limit offset
-            const query2 = "SELECT P.PRODUCT_PK, P.CARTEGORY_FK, P.PRICE, (SELECT IMG_DATA FROM project.PRODUCT_IMG_TB WHERE PRODUCT_FK = P.PRODUCT_PK LIMIT 1 ) AS IMG_DATA FROM PRODUCT_TB P WHERE CARTEGORY_FK = ? LIMIT ? OFFSET ?;";
-            
-            const [rows, fields] = await conn.query(query1, [product.category]);
-            
-            let {COUNT : pagesize} = rows[0]; //상품 갯수
-
-            pagesize =  Math.floor(pagesize/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
-            
-            const offset = (product.page -1) * pagesize;
-
-            console.log("pagesize " + pagesize + " offset " + offset );
-            const [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
-
-            await conn.commit();
-            return rows2;
-
-        }catch(error){
-            await conn.rollback();
-            console.log(error);
-            throw Error('트랜잭션 오류') ;
-        }finally{
-            conn.release();
+        //상위 카테카테고리
+        if(product.category % 10 === 0){
+            const upperCategory = product.category / 10  //팬던트, 플로어 등 상위 카테고리 앞자리(십의 자리 번호)
+            //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
+            let conn;
+            try{
+                conn = await maria.getConnection();
+                await conn.beginTransaction();
+    
+                //해당 카테고리 상품 총갯수
+                const query1 = "SELECT COUNT(*) AS COUNT FROM PRODUCT_TB WHERE CARTEGORY_FK LIKE ?;";
+                //해당카테고리 정보 페이징 해서 가져오기 limit offset
+                const query2 = "SELECT P.PRODUCT_PK, P.CARTEGORY_FK, P.PRICE, (SELECT IMG_DATA FROM project.PRODUCT_IMG_TB WHERE PRODUCT_FK =" +
+                     "P.PRODUCT_PK LIMIT 1 ) AS IMG_DATA FROM PRODUCT_TB P WHERE CARTEGORY_FK LIKE ? LIMIT ? OFFSET ?;";
+                
+                const [rows, fields] = await conn.query(query1, [`${upperCategory}_`]);
+                
+                let {COUNT : pagesize} = rows[0]; //상품 갯수
+    
+                pagesize =  Math.floor(pagesize/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
+                
+                const offset = (product.page -1) * pagesize;
+    
+                console.log("pagesize " + pagesize + " offset " + offset );
+                const [rows2, fields2]  =  await conn.query(query2, [`${upperCategory}_`, product.pageListSize, offset]);
+    
+                await conn.commit();
+                const response = {count: rows[0] ,data : rows2}
+                return response;
+    
+            }catch(error){
+                await conn.rollback();
+                console.log(error);
+                throw Error('트랜잭션 오류') ;
+            }finally{
+                conn.release();
+            }
         }
+        //세부 카테고리 라면
+        if(product.category %10 !== 0){
+            //첫번째 쿼리로 해당 카테고리 상품 몇갠지 / listsize 으로 페이지 갯수
+            let conn;
+            try{
+                conn = await maria.getConnection();
+                await conn.beginTransaction();
+    
+                //해당 카테고리 상품 총갯수
+                const query1 = "SELECT COUNT(*) AS COUNT FROM PRODUCT_TB WHERE CARTEGORY_FK = ?;";
+                //해당카테고리 정보 페이징 해서 가져오기 limit offset
+                const query2 = "SELECT P.PRODUCT_PK, P.CARTEGORY_FK, P.PRICE, (SELECT IMG_DATA FROM project.PRODUCT_IMG_TB WHERE PRODUCT_FK =" +
+                     "P.PRODUCT_PK LIMIT 1 ) AS IMG_DATA FROM PRODUCT_TB P WHERE CARTEGORY_FK = ? LIMIT ? OFFSET ?;";
+
+                const [rows, fields] = await conn.query(query1, [product.category]);
+                
+                let {COUNT : pagesize} = rows[0]; //상품 갯수
+    
+                pagesize =  Math.floor(pagesize/product.pageListSize) + 1 ; //보고 싶은 만큼으로 나눠서 최대 페이지수
+                
+                const offset = (product.page -1) * pagesize;
+    
+                console.log("pagesize " + pagesize + " offset " + offset );
+                const [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
+    
+                await conn.commit();
+                const response = {count : rows[0], data : rows2}
+                return response;
+    
+            }catch(error){
+                await conn.rollback();
+                console.log(error);
+                throw Error('트랜잭션 오류') ;
+            }finally{
+                conn.release();
+            }
+        }
+
+        
     }
     
     static async getHashtagProduct(client){
