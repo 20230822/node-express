@@ -6,7 +6,7 @@ const queryExe = require('./common');
 class ProductStorage{
     static async getProductInfo(id) {
         
-        const query ="SELECT * FROM  PRODUCT_TB WHERE PRODUCT_PK = ?;";
+        const query = "SELECT * FROM PRODUCT_TB AS P left join PRODUCT_IMG_TB AS I on P.PRODUCT_PK = I.PRODUCT_FK WHERE P.PRODUCT_PK = ?;";
         try{
             [rows, fields] =  await queryExe(query, [id]);
             if(rows)
@@ -17,7 +17,7 @@ class ProductStorage{
             
         }
         catch(error){
-            return { success : false, msg : error } ;
+            throw error;
         }
         // return new Promise((resolve, reject) => {
         //     const query = "SELECT * FROM  PRODUCT_TB WHERE PRODUCT_PK = ?;";

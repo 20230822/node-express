@@ -14,13 +14,10 @@ class Product{
     async getProductData(){
         try{
            const response = await ProductStorage.getProductInfo(this.body.id)
-             return {
-                success : true,
-                data : response.data
-            };
+             return response;
         }
-        catch{
-            return {success : false, msg : "상품 정보가 없습니다."};
+        catch(error){
+            return {success : false, msg: error.message};
         }
     }
 
