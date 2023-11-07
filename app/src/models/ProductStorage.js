@@ -14,7 +14,7 @@ class ProductStorage{
                 rows = rows.map(row => {
                     if (row.IMG_DATA) {
                       // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
-                      row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                      row.IMG_DATA = Buffer.from(row.IMG_DATA, 'base64').toString();
                     }
 
                     return row;
