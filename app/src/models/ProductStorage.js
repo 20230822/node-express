@@ -296,6 +296,18 @@ class ProductStorage{
         try{
             [rows, fields] = await queryExe(query, [productCnt]);
 
+            if (rows) {
+                // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                rows = rows.map(row => {
+                    if (row.IMG_DATA) {
+                    // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                    row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    }
+
+                    return row;
+                });
+            }
+
             return { success : true, data : rows };
         }
         catch(error){
@@ -409,13 +421,25 @@ class ProductStorage{
     
     static async getHashtagProduct(client){
         const productCnt = 5;
-        const query = "( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "
-          + "UNION ( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "
-          + "UNION ( SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?);";
+        const query = "( SELECT P.PRODUCT_PK, P.`HASHTAG`, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "
+          + "UNION ( SELECT P.PRODUCT_PK, P.`HASHTAG`, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?) "
+          + "UNION ( SELECT P.PRODUCT_PK, P.`HASHTAG`, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK WHERE HASHTAG REGEXP ? GROUP BY P.PRODUCT_PK LIMIT ?);";
     
         try{
-            [rows, fields] = await queryExe(query, [client.hashtag1, productCnt, client.hashtag2, productCnt, client.hashtag, productCnt]);
-            console.log(rows);
+            [rows, fields] = await queryExe(query, [client.hashtag1, productCnt, client.hashtag2, productCnt, client.hashtag3, productCnt]);
+            
+            if (rows) {
+                // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                rows = rows.map(row => {
+                    if (row.IMG_DATA) {
+                    // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                    row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    }
+
+                    return row;
+                });
+            }
+
             return { success : true, data : rows };
         }
         catch(error){
