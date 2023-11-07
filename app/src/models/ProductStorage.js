@@ -46,11 +46,46 @@ class ProductStorage{
             return {success : true};
         }
         catch(error){
-            return { success : false, msg : error } ;
+            console.log(error.message);
+            return { success : false, msg : error.message } ;
         }
 
 
     }
+
+    static async setImgData(prod){
+        let conn;
+        try{
+            conn = await maria.getConnection();
+            await conn.beginTransaction();
+
+            //상품키가 상품 테이블에 있는지 확인
+            //상품 이미지 insert
+            const query1 = "SELECT COUNT(*) FROM PRODUCT_TB WHERE PRODUCT_PK = ?";
+            const query2 = "INSERT INTO PRODUCT_IMG_TB(PRODUCT_FK, IMG_TYPE, IMG_DATA) VALUES(?, ?, ?)";
+            
+
+            let[rows, fields] = await conn.query(query1, [prod.productId]);
+            const {COUNT : countProd} = rows[0];
+
+            if(countProd !== 0)//상품이 존재한다면
+            {
+                await conn.query(query2,[prod.productId, prod.imgType, prod.imgData]);
+            }
+            //존재하면 아무것도 안해
+            
+            await conn.commit();
+            return { success : true, msg : "트랜잭션 성공"};
+
+        }catch(error){
+            await conn.rollback();
+            console.log(error);
+            return{ success : false, msg : "트랜잭션 오류"} ;
+        }finally{
+            conn.release();
+        }
+    }
+    
     static async searchProduct(searchKeyword){
         const query = "SELECT * FROM PRODUCT_TB WHERE PRODUCT_NM LIKE ? OR COLOR LIKE ? OR HASHTAG LIKE ?;";
         try{

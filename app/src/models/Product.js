@@ -13,10 +13,21 @@ class Product{
      */
     async getProductData(){
         try{
-           const response = await ProductStorage.getProductInfo(this.body.id)
-             return response;
+           const result = await ProductStorage.getProductInfo(this.body.id)
+           const images = [];
+           if(result.success){
+            
+            result.data.forEach((row) => {
+                const imageData = Buffer.from(row.IMG_DATA).toString('base64');
+                images.push(imageData);
+            });
+           }
+
+           const response = {success: result.success, data: result.data, dataImages : images}
+           return response;
         }
         catch(error){
+            console.log(error);
             return {success : false, msg: error.message};
         }
     }
@@ -34,7 +45,16 @@ class Product{
             return response;
             
         }catch (error) {
-            return {success : false, msg : error};
+            return {success : false, msg : error.message};
+        }
+    }
+
+    async saveImgData(){
+        try {
+            const response = await ProductStorage.setImgData(this.body);
+            return response;
+        } catch (error) {
+            return {success : false, msg : error.message};
         }
     }
 
