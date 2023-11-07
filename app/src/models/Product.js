@@ -19,11 +19,21 @@ class Product{
             
             result.data.forEach((row) => {
                 const imageData = Buffer.from(row.IMG_DATA).toString('base64');
-                images.push(imageData);
-            });
-           }
+                const imageDate = row.IMG_DT;
+                const imageType = row.IMG_TYPE;
+                delete row.IMG_DATA;
+                delete row.IMG_DT;
+                delete row.IMG_TYPE;
+                images.push({
+                    data : imageData,
+                    date : imageDate,
+                    type : imageType,
+                });
 
-           const response = {success: result.success, data: result.data, dataImages : images}
+            });
+        }
+
+           const response = {success: result.success, data: result.data[0], dataImages : images}
            return response;
         }
         catch(error){
