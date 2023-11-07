@@ -18,7 +18,7 @@ class Product{
            if(result.success){
             
             result.data.forEach((row) => {
-                const imageData = Buffer.from(row.IMG_DATA).toString('base64');
+                const imageData = row.IMG_DATA;
                 const imageDate = row.IMG_DT;
                 const imageType = row.IMG_TYPE;
                 delete row.IMG_DATA;
