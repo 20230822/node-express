@@ -9,8 +9,16 @@ class ProductStorage{
         const query = "SELECT * FROM PRODUCT_TB AS P left join PRODUCT_IMG_TB AS I on P.PRODUCT_PK = I.PRODUCT_FK WHERE P.PRODUCT_PK = ?;";
         try{
             [rows, fields] =  await queryExe(query, [id]);
-            if(rows)
-            {
+            if(rows) {
+                // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                rows = rows.map(row => {
+                    if (row.IMG_DATA) {
+                      // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                      row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    }
+
+                    return row;
+                });
                 return {success : true, data: rows};
             }
             return { success : true, msg : "일치하는 데이터가 없습니다." } ;
@@ -319,8 +327,20 @@ class ProductStorage{
                 
                 const offset = (product.page -1) * pagesize;
     
-                console.log("pagesize " + pagesize + " offset " + offset );
-                const [rows2, fields2]  =  await conn.query(query2, [`${upperCategory}_`, product.pageListSize, offset]);
+                // console.log("pagesize " + pagesize + " offset " + offset );
+                let [rows2, fields2]  =  await conn.query(query2, [`${upperCategory}_`, product.pageListSize, offset]);
+                
+                if (rows2) {
+                    // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                    rows2 = rows2.map(row => {
+                        if (row.IMG_DATA) {
+                        // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                        row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                        }
+
+                        return row;
+                    });
+                }
     
                 await conn.commit();
                 const response = {count: count ,products : rows2}
@@ -357,8 +377,20 @@ class ProductStorage{
                 const offset = (product.page -1) * pagesize;
     
                 console.log("pagesize " + pagesize + " offset " + offset );
-                const [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
+                let [rows2, fields2]  =  await conn.query(query2, [product.category, product.pageListSize, offset]);
     
+                if (rows2) {
+                    // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                    rows2 = rows2.map(row => {
+                        if (row.IMG_DATA) {
+                        // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                        row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                        }
+
+                        return row;
+                    });
+                }
+
                 await conn.commit();
                 const response = {count : count, products : rows2}
                 return response;
