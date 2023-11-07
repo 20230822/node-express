@@ -291,7 +291,7 @@ class ProductStorage{
 
     static async getRandProduct(){
         const productCnt = 3;
-        const query = "SELECT P.PRODUCT_PK, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK GROUP BY rand(PRODUCT_PK) Limit ?;";
+        const query = "SELECT P.PRODUCT_PK, P.PRODUCT_NM, PI.IMG_DATA FROM PRODUCT_TB P JOIN PRODUCT_IMG_TB PI ON P.PRODUCT_PK = PI.PRODUCT_FK GROUP BY rand(PRODUCT_PK) Limit ?;";
     
         try{
             [rows, fields] = await queryExe(query, [productCnt]);

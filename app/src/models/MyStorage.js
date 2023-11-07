@@ -8,7 +8,18 @@ class MyStorage{
         const query = "SELECT USER_NM, USER_ID, PROFILE_DATA FROM USER_TB WHERE USER_ID = ?;";
         try{
             [rows, fields] = await queryExe(query, [id]);
-            if (rows) return {success : true, data: rows};
+            if (rows) {
+                // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                rows = rows.map(row => {
+                    if (row.IMG_DATA) {
+                    // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                    row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    }
+
+                    return row;
+                });
+                return {success : true, data: rows};
+            }
             return { success : true, msg : "일치하는 데이터가 없습니다." } ;
         } catch(error) {
             return { success : false, msg : error };
@@ -28,7 +39,19 @@ class MyStorage{
             + "GROUP BY P.PRODUCT_NM;";
         try{
             [rows, fields] = await queryExe(query, [id]);
-            if (rows) return {success : true, data: rows};
+
+            if (rows) {
+                // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                rows = rows.map(row => {
+                    if (row.IMG_DATA) {
+                    // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                    row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    }
+
+                    return row;
+                });
+                return {success : true, data: rows};
+            }
             return { success : true, msg : "일치하는 데이터가 없습니다." } ;
         } catch(error) {
             return { success : false, msg : error };
@@ -45,7 +68,18 @@ class MyStorage{
             + "GROUP BY W.PRODUCT_FK;";
         try {
             [rows, fields] = await queryExe(query, [id]);
-            if (rows) return {success : true, data: rows};
+            if (rows) {
+                // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                rows = rows.map(row => {
+                    if (row.IMG_DATA) {
+                    // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                    row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    }
+
+                    return row;
+                });
+                return {success : true, data: rows};
+            }
             return { success : true, msg : "일치하는 데이터가 없습니다." } ;
         } catch(error) {
             return { success : false, msg : error };
@@ -56,7 +90,17 @@ class MyStorage{
         const query = "SELECT * FROM ORDER_TB WHERE USER_FK = ?;";
         try {
             [rows, fields] = await queryExe(query, [id]);
-            if (rows) return {success : true, data: rows};
+            if (rows) {
+                // rows가 존재하면 IMG_DATA를 base64로 인코딩
+                rows = rows.map(row => {
+                    if (row.IMG_DATA) {
+                        // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
+                        row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    }
+                    return row;
+                });
+                return {success : true, data: rows};
+            }
             return { success : true, msg : "일치하는 데이터가 없습니다." } ;
         } catch(error) {
             return { success : false, msg : error };
@@ -145,19 +189,6 @@ class MyStorage{
             conn.relase();
         }
     }
-
-    /*
-    static async delMyWishlist(client, id) {
-        const query = "DELETE FROM WISHLIST_TB WHERE USER_FK = ? AND PRODUCT_FK = ?;";
-        try {
-            [rows, fields] = await queryExe(query, [id, client.product_id]);
-            if (rows) return {success : true, data: rows};
-            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
-        } catch(error) {
-            return { success : false, msg : error };
-        }
-    }
-    */
 }
 
 module.exports = MyStorage;
