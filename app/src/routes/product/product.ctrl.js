@@ -33,6 +33,15 @@ const process = {
 
     // },
 
+    saveImg : async(req, res) =>{
+        const product = new Product(req.body);
+        const response = await product.saveImgData();
+        if(response.success === true){
+            return res.status(200).json(response);
+        }
+        return res.status(500).json(response);
+    },
+    
     search: async (req, res) =>{
         //키워드 받아서 select like문
         const encoded = req.query.keyword
