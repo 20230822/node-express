@@ -52,17 +52,6 @@ class MyStorage{
         }
     }
 
-    static async getMyRecommended() {
-        const query = "SELECT * FROM RECOMMENDED_TB;";
-        try {
-            [rows, fields] = await queryExe(query, []);
-            if (rows) return {success : true, data: rows};
-            return { success : true, msg : "일치하는 데이터가 없습니다." } ;
-        } catch(error) {
-            return { success : false, msg : error };
-        }
-    }
-
     static async getMyOrder(id) {
         const query = "SELECT * FROM ORDER_TB WHERE USER_FK = ?;";
         try {

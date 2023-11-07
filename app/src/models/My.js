@@ -8,6 +8,10 @@ class My{
         this.body = body;
     }
 
+    /**
+     * 해당 회원의 정보를 불러옴
+     * @returns {any} - success : 수행 성공여부, data : 회원 정보
+     */
     static async mypage(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
@@ -23,6 +27,11 @@ class My{
         }
     }
 
+
+    /**
+     * 해당 회원의 정보를 불러옴
+     * @returns {any} - success : 수행 성공여부, data : 회원 정보
+     */
     static async cart(token){
         try {
             const data = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
@@ -47,16 +56,6 @@ class My{
                 const myWishlist = await MyStorage.getMyWishlist(id);
                 return { success : true, data : myWishlist.data };
             }
-
-        } catch(err) {
-            return { success: false, msg : err };
-        }
-    }
-
-    static async recommended(){
-        try {
-            const myRecommended = await MyStorage.getMyRecommended();
-            return { success : true, data : myRecommended.data };
 
         } catch(err) {
             return { success: false, msg : err };

@@ -5,7 +5,6 @@ const ctrl = require('./my.ctrl');
 router.post('/', ctrl.process.mypage);
 router.post('/cart', ctrl.process.cart);
 router.post('/wishlist', ctrl.process.wishlist);
-router.post('/recommended', ctrl.process.recommended);
 router.post('/order', ctrl.process.order);
 
 router.put('/edit', ctrl.update.edit);
