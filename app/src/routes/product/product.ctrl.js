@@ -44,11 +44,15 @@ const process = {
     
     search: async (req, res) =>{
         //키워드 받아서 select like문
+        console.log("검색 " + req.query.keyword);
+        if(req.query.keyword == ""){
+            return res.status(200).json({success : true});
+        }
         const encoded = req.query.keyword
         const decoded = decodeURIComponent(encoded);
         const product = new Product(decoded);
         const result = await product.search();
-        console.log(result.data);
+        // console.log(result.data);
         if(result.success === true){
             return res.status(200).json(result);
         }
