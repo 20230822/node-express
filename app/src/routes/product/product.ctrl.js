@@ -44,6 +44,9 @@ const process = {
     
     search: async (req, res) =>{
         //키워드 받아서 select like문
+        if(req.query.body == null){
+            return res.status(200).json({success : true});
+        }
         const encoded = req.query.keyword
         const decoded = decodeURIComponent(encoded);
         const product = new Product(decoded);
