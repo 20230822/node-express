@@ -87,7 +87,7 @@ class MyStorage{
     }
 
     static async getMyOrder(id) {
-        const query = "SELECT * FROM ORDER_TB WHERE USER_FK = ?;";
+        const query = "SELECT O.PRODUCT_FK, PI.IMG_DATA FROM ORDER_TB O JOIN PRODUCT_IMG_TB PI ON O.PRODUCT_FK = PI.PRODUCT_FK WHERE USER_FK = ? GROUP BY O.PRODUCT_FK;";
         try {
             [rows, fields] = await queryExe(query, [id]);
             if (rows) {
