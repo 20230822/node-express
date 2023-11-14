@@ -13,7 +13,7 @@ class MyStorage{
                 rows = rows.map(row => {
                     if (row.PROFILE_DATA) {
                     // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
-                    row.PROFILE_DATA = Buffer.from(row.PROFILE_DATA).toString('base64');
+                    row.PROFILE_DATA = Buffer.from(row.PROFILE_DATA, 'base64').toString();
                     }
 
                     return row;
@@ -45,7 +45,7 @@ class MyStorage{
                 rows = rows.map(row => {
                     if (row.IMG_DATA) {
                     // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
-                    row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    row.IMG_DATA = Buffer.from(row.IMG_DATA, 'base64').toString();
                     }
 
                     return row;
@@ -73,7 +73,7 @@ class MyStorage{
                 rows = rows.map(row => {
                     if (row.IMG_DATA) {
                     // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
-                    row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                    row.IMG_DATA = Buffer.from(row.IMG_DATA, 'base64').toString();
                     }
 
                     return row;
@@ -87,7 +87,7 @@ class MyStorage{
     }
 
     static async getMyOrder(id) {
-        const query = "SELECT * FROM ORDER_TB WHERE USER_FK = ?;";
+        const query = "SELECT O.PRODUCT_FK, PI.IMG_DATA FROM ORDER_TB O JOIN PRODUCT_IMG_TB PI ON O.PRODUCT_FK = PI.PRODUCT_FK WHERE USER_FK = ? GROUP BY O.PRODUCT_FK;";
         try {
             [rows, fields] = await queryExe(query, [id]);
             if (rows) {
@@ -95,7 +95,7 @@ class MyStorage{
                 rows = rows.map(row => {
                     if (row.IMG_DATA) {
                         // Buffer에 데이터를 바이너리로 로드하고 base64로 인코딩
-                        row.IMG_DATA = Buffer.from(row.IMG_DATA).toString('base64');
+                        row.IMG_DATA = Buffer.from(row.IMG_DATA, 'base64').toString();
                     }
                     return row;
                 });
