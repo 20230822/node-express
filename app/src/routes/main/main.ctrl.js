@@ -23,6 +23,7 @@ const process = {
     
     hashtag : async (req, res) => {
         try {
+            console.log( "해시 1 : " + req.body.hashtag1 +  "해시 2 : "  + req.body.hashtag2 +  "해시 3 : " +  req.body.hashtag3 );
             const product = new Product(req.body);
             const response = await product.hashtag();
             
